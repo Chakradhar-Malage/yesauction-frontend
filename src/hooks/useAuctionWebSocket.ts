@@ -55,6 +55,12 @@ export const useAuctionWebSocket = (auctionId: number | null) => {
             }
           }
         );
+
+        client.subscribe('/user/queue/notifications', (message: IMessage) => {
+          const notif = JSON.parse(message.body);
+          console.log('Personal notification:', notif);
+          alert(`Outbid alert: ${notif.newBidderUsername} bid $${notif.newAmount} on ${notif.auctionTitle}`);
+        });
       };
 
       client.onStompError = (frame) => {
