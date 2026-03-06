@@ -21,7 +21,7 @@ export default function Login() {
       localStorage.setItem("token", data.token);
 
       alert("Login successful!");
-      navigate("/");
+      window.location.href = "/";
     } catch (err: any) {
       setError(err.response?.data?.error || "Login failed");
     }

@@ -17,11 +17,11 @@ export default function AuctionCard({ title, description, currentPrice, endTime 
       </h3>
 
       <p className="text-green-600 font-bold text-lg">
-        ${description}
+        {description}
       </p>
 
       <p className="text-green-600 font-bold text-lg">
-        ${currentPrice}
+        Rs. {currentPrice}
       </p>
 
       <p className="text-sm text-gray-500 mb-4">
