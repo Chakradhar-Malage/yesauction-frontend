@@ -6,7 +6,7 @@ interface Auction {
   id: number;
   title: string;
   description: string;
-  currentPrice: string;
+  currentPrice: number;
   endTime: string;
 }
 
