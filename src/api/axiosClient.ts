@@ -17,4 +17,10 @@ axiosClient.interceptors.request.use((config) => {
   return config;
 });
 
+
+export const fetchAuctions = async () => {
+    const response = await axiosClient.get("/auctions");
+    return response.data;
+}
+
 export default axiosClient;
