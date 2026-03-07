@@ -1,99 +1,91 @@
-import { useEffect, useRef, useState } from 'react';
-import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
-import { AuctionUpdateDto } from '../dto/AuctionUpdateDto';
+import { useEffect, useRef, useState } from "react";
+import { Client, IMessage, StompSubscription } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 
-// We'll define interface matching backend DTO
-interface AuctionUpdate {
-  auctionId: number;
-  currentPrice: string; // BigDecimal → string in JSON
-  latestBid?: {
-    amount: string;
-    bidderUsername: string;
-    bidTime: string;
-  };
-}
-
-const WS_URL = 'http://localhost:8081/ws'; // match your backend endpoint
+import { AuctionUpdateDto } from "../dto/AuctionUpdateDto";
+import { WS_BASE_URL, WS_TOPICS } from "../api/apiConfig";
 
 export const useAuctionWebSocket = (auctionId: number | null) => {
   const clientRef = useRef<Client | null>(null);
-  const subscriptionRef = useRef<StompSubscription | null>(null);
-  const [updates, setUpdates] = useState<AuctionUpdate[]>([]); // or use Redux
+  const auctionSubscriptionRef = useRef<StompSubscription | null>(null);
+  const notificationSubscriptionRef = useRef<StompSubscription | null>(null);
+
+  const [updates, setUpdates] = useState<AuctionUpdateDto[]>([]);
   const [connected, setConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!auctionId) return;
 
-    // Create client only once
-    if (!clientRef.current) {
-      const socket = new SockJS(WS_URL);
-      const client = new Client({
-        webSocketFactory: () => socket,
-        reconnectDelay: 5000,
-        heartbeatIncoming: 4000,
-        heartbeatOutgoing: 4000,
-        debug: (str) => console.log(str), // remove in prod
-      });
+    const socket = new SockJS(WS_BASE_URL);
 
-      client.onConnect = () => {
-        console.log('WebSocket Connected');
-        setConnected(true);
-        setError(null);
+    const client = new Client({
+      webSocketFactory: () => socket,
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+    });
 
-        // Subscribe to this specific auction topic
-        subscriptionRef.current = client.subscribe(
-          `/topic/auction/${auctionId}`,
-          (message: IMessage) => {
-            try {
-              const update: AuctionUpdate = JSON.parse(message.body);
-              setUpdates((prev) => [...prev, update]); // or update current state
-              console.log('Received bid update:', update);
-            } catch (err) {
-              console.error('Parse error:', err);
-            }
+    client.onConnect = () => {
+      setConnected(true);
+      setError(null);
+
+      // Auction updates
+      auctionSubscriptionRef.current = client.subscribe(
+        WS_TOPICS.AUCTION(auctionId),
+        (message: IMessage) => {
+          try {
+            const update: AuctionUpdateDto = JSON.parse(message.body);
+
+            setUpdates((prev) => [...prev, update]);
+          } catch (err) {
+            console.error("WebSocket parse error:", err);
           }
-        );
+        }
+      );
 
-        client.subscribe('/user/queue/notifications', (message: IMessage) => {
-          const notif = JSON.parse(message.body);
-          console.log('Personal notification:', notif);
-          alert(`Outbid alert: ${notif.newBidderUsername} bid $${notif.newAmount} on ${notif.auctionTitle}`);
-        });
-      };
+      // Personal notifications
+      notificationSubscriptionRef.current = client.subscribe(
+        WS_TOPICS.USER_NOTIFICATIONS,
+        (message: IMessage) => {
+          const notification = JSON.parse(message.body);
 
-      client.onStompError = (frame) => {
-        console.error('Broker reported error: ' + frame.headers['message']);
-        setError(frame.headers['message']);
-      };
+          console.log("Notification:", notification);
 
-      client.onWebSocketClose = () => {
-        console.log('WebSocket Closed');
-        setConnected(false);
-      };
+          alert(
+            `Outbid alert: ${notification.newBidderUsername} bid $${notification.newAmount}`
+          );
+        }
+      );
+    };
 
-      client.activate();
-      clientRef.current = client;
-    }
+    client.onStompError = (frame) => {
+      setError(frame.headers["message"]);
+    };
 
-    // Cleanup on unmount or auctionId change
+    client.onWebSocketClose = () => {
+      setConnected(false);
+    };
+
+    client.activate();
+    clientRef.current = client;
+
     return () => {
-      if (subscriptionRef.current) {
-        subscriptionRef.current.unsubscribe();
-        subscriptionRef.current = null;
-      }
-      // Do NOT deactivate here if you want persistent connection across pages
-      // For single-page auction view: clientRef.current?.deactivate();
+      auctionSubscriptionRef.current?.unsubscribe();
+      notificationSubscriptionRef.current?.unsubscribe();
     };
   }, [auctionId]);
 
-  // Optional: manual disconnect if needed
   const disconnect = () => {
     clientRef.current?.deactivate();
     clientRef.current = null;
     setConnected(false);
   };
 
-  return { updates, connected, error, disconnect };
+  return {
+    updates,
+    connected,
+    error,
+    disconnect,
+  };
 };

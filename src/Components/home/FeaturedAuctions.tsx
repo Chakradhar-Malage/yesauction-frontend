@@ -21,8 +21,8 @@ export default function FeaturedAuctions() {
     );
   }
 
-  const visibleAuctions = auctions.slice(0, 3);
-  const lockedAuctions = auctions.slice(3, 6);
+  // const visibleAuctions = auctions.slice(0, 3);
+  const lockedAuctions = auctions.slice(0, 3);
 
   return (
     <section className="max-w-7xl mx-auto px-6 py-16">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchAuctions } from "../api/axiosClient";
+import { fetchAuctions } from "../api/auctionApis";
 
 export interface Auction {
   id: number;
