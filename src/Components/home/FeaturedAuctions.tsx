@@ -65,8 +65,7 @@ export default function FeaturedAuctions() {
                 title={auction.title}
                 description={auction.description}
                 currentPrice={Number(auction.currentPrice)}
-                endTime={auction.endTime}
-              />
+                endTime={auction.endTime} id={0}              />
             ))}
           </div>
 
