@@ -9,3 +9,12 @@ export interface AuctionUpdateDto {
   currentPrice: string;
   latestBid?: BidUpdate;
 }
+
+export interface AuctionDetailDto {
+  id: number;
+  title: string;
+  description: string;
+  currentPrice: number;
+  startingPrice: number;
+  endTime: string;
+}

@@ -1,15 +1,18 @@
 import useCountdown from "../../hooks/useCountdown";
+import { Link } from "react-router-dom";
 
 interface Props {
+  id: number
   title: string
   description: string
   currentPrice: number
   endTime: string
 }
 
-export default function AuctionCard({ title, description, currentPrice, endTime }: Props) {
+export default function AuctionCard({ id, title, description, currentPrice, endTime }: Props) {
 
   return (
+    <Link to={`/auction/${id}`}>
     <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition p-6">
 
       <div className="h-40 bg-gray-200 rounded-lg mb-4" />
@@ -35,5 +38,6 @@ export default function AuctionCard({ title, description, currentPrice, endTime 
       </button>
 
     </div>
+    </Link>
   );
 }
