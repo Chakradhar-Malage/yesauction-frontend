@@ -1,3 +1,5 @@
+import useCountdown from "../../hooks/useCountdown";
+
 interface Props {
   title: string
   description: string
@@ -24,8 +26,8 @@ export default function AuctionCard({ title, description, currentPrice, endTime 
         Rs. {currentPrice}
       </p>
 
-      <p className="text-sm text-gray-500 mb-4">
-        Ends: {new Date(endTime).toLocaleString()}
+      <p>
+        ⏳ {useCountdown(endTime)}
       </p>
 
       <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">

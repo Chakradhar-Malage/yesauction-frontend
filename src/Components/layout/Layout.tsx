@@ -9,9 +9,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div>
 
       {/* Navbar */}
-      <header>
+      {/* <header>
         <h2>YesAuction</h2>
-      </header>
+      </header> */}
 
       {/* Page Content */}
       <main>
