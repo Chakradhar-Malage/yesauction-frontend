@@ -17,7 +17,7 @@ export default function Home() {
 
       <FeaturedAuctions />
 
-      {/* <EndingSoon /> */}
+      <EndingSoon />
 
       {/* <HowItWorks /> */}
 
