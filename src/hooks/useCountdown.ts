@@ -1,28 +1,35 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function useCountdown(endTime: string){
-    const calculateTime = () => {
-        const diff = new Date(endTime).getTime() - new Date().getTime();
+export default function useCountdown(endTime?: string) {
 
-        if (diff <= 0){
-            return "Ended";
-        }
+  const calculateTime = () => {
 
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff / (1000 * 60 )) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
+    if (!endTime) return "Loading...";
 
-        return `${hours}h ${minutes}m ${seconds}s`;
+    const diff = new Date(endTime).getTime() - Date.now();
+
+    if (diff <= 0) {
+      return "Ended";
     }
 
-    const [timeLeft, setTimeLeft] = useState(calculateTime());
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setTimeLeft(calculateTime());
+    return `${hours}h ${minutes}m ${seconds}s`;
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculateTime());
+
+  useEffect(() => {
+
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTime());
     }, 1000);
-        return () => clearInterval(timer);
-    }, [endTime]);
 
-    return timeLeft;
+    return () => clearInterval(timer);
+
+  }, [endTime]);
+
+  return timeLeft;
 }
