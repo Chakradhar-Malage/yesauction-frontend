@@ -3,21 +3,23 @@ import { useParams } from "react-router-dom";
 
 import { fetchAuctionById, placeBid } from "../api/auctionApis";
 import { useAuctionWebSocket } from "../hooks/useAuctionWebSocket";
+import useCountdown from "../hooks/useCountdown";
 
-import { AuctionDetailDto } from "../dto/AuctionUpdateDto";
+import { Auction } from "../types/Auction";
+import { AuctionUpdateDto } from "../dto/AuctionUpdateDto";
 
 export default function AuctionDetail() {
-
   const { id } = useParams();
   const auctionId = id ? Number(id) : null;
 
-  const { updates, connected, error } = useAuctionWebSocket(auctionId);
-
-  const [auction, setAuction] = useState<AuctionDetailDto | null>(null);
+  const [auction, setAuction] = useState<Auction | null>(null);
   const [loading, setLoading] = useState(true);
   const [bidAmount, setBidAmount] = useState("");
+  
+  const timeLeft = useCountdown(auction?.endTime);
+  const { updates, connected, error } = useAuctionWebSocket(auctionId);
 
-  // Fetch initial auction
+  // Fetch auction
   useEffect(() => {
     if (!auctionId) return;
 
@@ -27,7 +29,7 @@ export default function AuctionDetail() {
         const data = await fetchAuctionById(auctionId);
         setAuction(data);
       } catch (err) {
-        console.error("Auction fetch failed", err);
+        console.error("Failed to load auction", err);
       } finally {
         setLoading(false);
       }
@@ -40,7 +42,7 @@ export default function AuctionDetail() {
   useEffect(() => {
     if (!auction || updates.length === 0) return;
 
-    const latest = updates[updates.length - 1];
+    const latest: AuctionUpdateDto = updates[updates.length - 1];
 
     setAuction((prev) =>
       prev
@@ -48,7 +50,7 @@ export default function AuctionDetail() {
             ...prev,
             currentPrice: Number(latest.currentPrice),
           }
-        : prev
+        : prev,
     );
   }, [updates]);
 
@@ -58,7 +60,7 @@ export default function AuctionDetail() {
     const amount = parseFloat(bidAmount);
 
     if (!amount || isNaN(amount)) {
-      alert("Enter a valid bid amount");
+      alert("Enter valid bid amount");
       return;
     }
 
@@ -66,108 +68,94 @@ export default function AuctionDetail() {
       await placeBid(auctionId, amount);
       setBidAmount("");
     } catch (err: any) {
-      alert(err.response?.data?.error || "Bid failed");
+      alert(err?.response?.data?.error || "Bid failed");
     }
   };
 
   if (loading) {
-    return <div className="text-center py-10">Loading auction...</div>;
+    return <div className="text-center py-20">Loading auction... </div>;
   }
 
   if (!auction) {
-    return <div className="text-center py-10">Auction not found</div>;
+    return <div className="text-center py-20">Auction not found </div>;
   }
 
+
   return (
-    <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg mt-8">
+    <div className="max-w-6xl mx-auto px-6 py-10">
+      <div className="grid md:grid-cols-2 gap-10">
+        {/* IMAGE */}
+        <div className="h-96 bg-gray-200 rounded-xl flex items-center justify-center">
+          <span className="text-gray-500">Auction Image</span>
+        </div>
 
-      <h1 className="text-3xl font-bold mb-4">
-        {auction.title}
-      </h1>
-
-      <p className="text-gray-600 mb-6">
-        {auction.description}
-      </p>
-
-      <div className="grid md:grid-cols-2 gap-8 mb-8">
-
+        {/* DETAILS */}
         <div>
-          <p className="text-xl">
-            Current Price:
-            <span className="text-3xl font-bold text-green-600 ml-2">
+          <h1 className="text-3xl font-bold mb-4">{auction.title}</h1>
+
+          <p className="text-gray-600 mb-6">{auction.description}</p>
+
+          <div className="bg-gray-100 p-6 rounded-xl mb-6">
+            <p className="text-lg">Starting Price: ₹{auction.startingPrice}</p>
+
+            <p className="text-3xl font-bold text-green-600">
               ₹{auction.currentPrice}
-            </span>
-          </p>
+            </p>
 
-          <p className="mt-2 text-sm text-gray-500">
-            Ends at: {new Date(auction.endTime).toLocaleString()}
-          </p>
+            <p className="text-red-500 font-semibold">⏳ {timeLeft}</p>
+
+            <p className="text-sm text-gray-500 mt-2">
+              WebSocket: {connected ? "🟢 Connected" : "🔴 Disconnected"}
+            </p>
+
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+          </div>
+
+          {/* BID INPUT */}
+
+          <div className="flex gap-4 mb-8">
+            <input
+              type="number"
+              step="0.01"
+              value={bidAmount}
+              onChange={(e) => setBidAmount(e.target.value)}
+              placeholder="Enter your bid"
+              className="border p-3 rounded-lg flex-1"
+            />
+
+            <button
+              onClick={handlePlaceBid}
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+            >
+              Place Bid
+            </button>
+          </div>
         </div>
-
-        <div>
-          <p>
-            Connection: {connected ? "🟢 Live" : "🔴 Disconnected"}
-          </p>
-
-          {error && (
-            <p className="text-red-500">{error}</p>
-          )}
-        </div>
-
       </div>
 
-      {/* Bid Section */}
+      {/* LIVE BID HISTORY */}
 
-      <div className="flex items-center gap-4 mb-8">
+      <div className="mt-10">
+        <h2 className="text-xl font-bold mb-4">Live Bid History</h2>
 
-        <input
-          type="number"
-          step="0.01"
-          value={bidAmount}
-          onChange={(e) => setBidAmount(e.target.value)}
-          placeholder="Enter bid amount"
-          className="border p-3 rounded w-64"
-        />
+        {updates.length === 0 && <p className="text-gray-500">No bids yet</p>}
 
-        <button
-          onClick={handlePlaceBid}
-          className="bg-blue-600 text-white px-8 py-3 rounded hover:bg-blue-700"
-        >
-          Place Bid
-        </button>
+        <div className="space-y-2">
+          {updates
+            .slice()
+            .reverse()
+            .map((u, index) => (
+              <div
+                key={index}
+                className="flex justify-between bg-gray-100 p-3 rounded"
+              >
+                <span>{u.latestBid?.bidderUsername}</span>
 
-      </div>
-
-      {/* Live Activity */}
-
-      {updates.length > 0 && (
-        <div className="mt-8">
-
-          <h2 className="text-xl font-semibold mb-4">
-            Live Activity
-          </h2>
-
-          <ul className="space-y-3 max-h-60 overflow-y-auto">
-
-            {updates.map((update, i) => (
-              <li key={i} className="bg-gray-50 p-4 rounded border">
-
-                <strong>₹{update.latestBid?.amount}</strong>
-                {" "}by{" "}
-                <strong>{update.latestBid?.bidderUsername}</strong>
-
-                <span className="text-sm text-gray-500 ml-4">
-                  {new Date(update.latestBid?.bidTime || "").toLocaleTimeString()}
-                </span>
-
-              </li>
+                <span className="font-bold">₹{u.currentPrice}</span>
+              </div>
             ))}
-
-          </ul>
-
         </div>
-      )}
-
+      </div>
     </div>
   );
 }
