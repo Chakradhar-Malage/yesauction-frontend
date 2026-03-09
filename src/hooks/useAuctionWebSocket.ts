@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Client, IMessage, StompSubscription } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-import { AuctionUpdateDto } from "../dto/AuctionUpdateDto";
+import { AuctionUpdateDto, BidUpdate } from "../dto/AuctionUpdateDto";
 import { WS_BASE_URL, WS_TOPICS } from "../api/apiConfig";
 
 export const useAuctionWebSocket = (auctionId: number | null) => {
@@ -10,7 +10,7 @@ export const useAuctionWebSocket = (auctionId: number | null) => {
   const auctionSubscriptionRef = useRef<StompSubscription | null>(null);
   const notificationSubscriptionRef = useRef<StompSubscription | null>(null);
 
-  const [updates, setUpdates] = useState<AuctionUpdateDto[]>([]);
+  const [updates, setUpdates] = useState<BidUpdate[]>([]);
   const [connected, setConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,8 +35,8 @@ export const useAuctionWebSocket = (auctionId: number | null) => {
         WS_TOPICS.AUCTION(auctionId),
         (message: IMessage) => {
           try {
-            const update: AuctionUpdateDto = JSON.parse(message.body);
-
+            const update: BidUpdate = JSON.parse(message.body);
+            console.log("WS UPDATE RECEIVED:", update); 
             setUpdates((prev) => [...prev, update]);
           } catch (err) {
             console.error("WebSocket parse error:", err);
@@ -73,6 +73,7 @@ export const useAuctionWebSocket = (auctionId: number | null) => {
     return () => {
       auctionSubscriptionRef.current?.unsubscribe();
       notificationSubscriptionRef.current?.unsubscribe();
+      client.deactivate();
     };
   }, [auctionId]);
 
