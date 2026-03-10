@@ -15,9 +15,10 @@ export default function AuctionDetailPage() {
   const [auction, setAuction] = useState<Auction | null>(null);
   const [loading, setLoading] = useState(true);
   const [bidAmount, setBidAmount] = useState("");
-
+  
   const { updates, connected, error } = useAuctionWebSocket(auctionId);
   const timeLeft = useCountdown(auction?.endTime);
+  const auctionEnded = auction ? new Date(auction.endTime) < new Date() : false;
 
   // Fetch auction
   useEffect(() => {
@@ -50,10 +51,11 @@ export default function AuctionDetailPage() {
     if (!auctionId) return;
 
     const amount = parseFloat(bidAmount);
-    if (!amount || isNaN(amount)) {
-      alert("Enter valid bid amount");
+    const minBid = auction ? Number(auction.currentPrice) * 1.05 : 0;
+    if (!amount || isNaN(amount) || amount < minBid) {
+      alert(`Enter a valid bid amount (minimum: ₹${minBid.toFixed(2)})`);
       return;
-    }
+    } 
 
     try {
       await placeBid(auctionId, amount);
@@ -100,11 +102,19 @@ export default function AuctionDetailPage() {
               className="border p-3 rounded-lg flex-1"
             />
             <button
+            disabled={auctionEnded}
+              className={`px-6 py-3 rounded-lg text-white
+                ${auctionEnded ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}
+              `}
+              >
+                {auctionEnded ? "Auction Ended" : "Place Bid"}
+            </button>
+            {/* <button
               onClick={handlePlaceBid}
               className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
             >
               Place Bid
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
