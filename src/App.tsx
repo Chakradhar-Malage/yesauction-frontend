@@ -5,6 +5,7 @@ import AuctionList from "./pages/AuctionList";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AuctionDetail from "./pages/AuctionDetail";
+// import AuctionDetails from "./Components/Auction/auctionDetails";
 
 function App() {
   return (
