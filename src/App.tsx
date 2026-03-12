@@ -5,6 +5,7 @@ import AuctionList from "./pages/AuctionList";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AuctionDetail from "./pages/AuctionDetail";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
           <Route path="/register" element={<Register />} />
 
           <Route path="/auction/:id" element={<AuctionDetail />} />
+
+          <Route path="/users/:username" element={<Profile />} />
 
         </Routes>
 
