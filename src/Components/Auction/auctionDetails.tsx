@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { fetchAuctionById, placeBid } from "../../api/auctionApis";
+import { fetchAuctionById, placeBid, fetchBidHistory } from "../../api/auctionApis";
 import { useAuctionWebSocket } from "../../hooks/useAuctionWebSocket";
 import useCountdown from "../../hooks/useCountdown";
-
+import { Bid } from "../../types/Bid";
 import { AuctionDetailDto, BidUpdate } from "../../dto/AuctionUpdateDto";
 
 export default function AuctionDetail() {
@@ -12,7 +12,7 @@ export default function AuctionDetail() {
   const auctionId = id ? Number(id) : null;
 
   const { updates, connected, error } = useAuctionWebSocket(auctionId);
-
+  const [bidHistory, setBidHistory] = useState<Bid[]>([]);
   const [auction, setAuction] = useState<AuctionDetailDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [bidAmount, setBidAmount] = useState("");
@@ -26,6 +26,12 @@ export default function AuctionDetail() {
         setLoading(true);
         const data = await fetchAuctionById(auctionId);
         setAuction(data);
+
+        // setBidHistory( await fetchBidHistory(auctionId) );
+        fetchBidHistory(auctionId)
+        .then(setBidHistory)
+        .catch(console.error);
+
       } catch (err) {
         console.error("Auction fetch failed", err);
       } finally {
@@ -44,6 +50,14 @@ export default function AuctionDetail() {
     setAuction(prev =>
       prev ? { ...prev, currentPrice: Number(latest.amount) } : prev
     );
+
+    setBidHistory(prev => [
+      ...prev, {
+        amount : Number (latest.amount),
+        bidderUsername : latest.bidderUsername,
+        bidTime : latest.bidTime
+      }
+    ]);
   }, [updates]);
 
   const handlePlaceBid = async () => {
