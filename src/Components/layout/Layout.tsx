@@ -1,4 +1,5 @@
 import React from "react";
+import Footer from "./Footer";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -7,21 +8,13 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div>
-
-      {/* Navbar */}
-      {/* <header>
-        <h2>YesAuction</h2>
-      </header> */}
-
       {/* Page Content */}
       <main>
         {children}
       </main>
 
       {/* Footer */}
-      <footer>
-        <p>© 2026 YesAuction</p>
-      </footer>
+      <Footer />
 
     </div>
   );
