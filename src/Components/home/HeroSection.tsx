@@ -15,7 +15,7 @@ export default function HeroSection() {
     }
 
     // Not verified
-    if (!user.mobileVerified) {
+    if (!user.mobileNumberVerified) {
       navigate("/verify-mobile");
       return;
     }

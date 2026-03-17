@@ -6,6 +6,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AuctionDetail from "./pages/AuctionDetail";
 import Profile from "./pages/Profile";
+import VerifyMobile from "./pages/VerifyMobileNumber";
+import CreateAuction from "./pages/CreateAuction";
+
 
 function App() {
   return (
@@ -27,6 +30,10 @@ function App() {
 
           <Route path="/users/:username" element={<Profile />} />
 
+          <Route path="/verify-mobile" element={<VerifyMobile />} />
+
+          <Route path="/create-auction" element={<CreateAuction />} />
+          
         </Routes>
 
       </Layout>
