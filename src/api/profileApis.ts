@@ -4,3 +4,16 @@ export const getCurrentUser = async () => {
   const response = await axiosClient.get("/users/me");
   return response.data;
 };
+
+//my all bidhistory
+export const getMyBidHistory = async () => {
+  const response = await axiosClient.get("/users/me/bids?page=0&size=7");
+  return response.data.content;
+}
+
+//my all auctions
+export const getMyAuctions = async (page: number) => {
+  const response = await axiosClient.get(`/users/me/auctions?page=${page}&size=7`);
+  return response.data;
+};
+
