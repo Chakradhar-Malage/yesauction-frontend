@@ -10,6 +10,7 @@ import VerifyMobile from "./pages/VerifyMobileNumber";
 import CreateAuction from "./pages/CreateAuction";
 import MyAuctions from "./pages/MyAuctions";
 import MyBids from "./pages/MyBids";
+import EditAuction from "./pages/EditAuction";
 
 
 function App() {
@@ -40,6 +41,8 @@ function App() {
 
           <Route path="/my-bids" element={<MyBids />} />
 
+          <Route path="/edit-auction/:id" element={<EditAuction />} />
+          
         </Routes>
 
       </Layout>

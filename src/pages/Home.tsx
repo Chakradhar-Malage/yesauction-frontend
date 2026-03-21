@@ -24,17 +24,3 @@ export default function Home() {
     </div>
   );
 }
-
-
-// import FeaturedAuctions from "../Components/home/FeaturedAuctions";
-// import CategorySection from "../Components/home/CategorySection";
-
-// export default function Home() {
-
-//   return (
-//     <>
-//       <CategorySection />
-//       <FeaturedAuctions />
-//     </>
-//   );
-// }
