@@ -1,43 +1,99 @@
-import useCountdown from "../../hooks/useCountdown";
 import { Link } from "react-router-dom";
+import useCountdown from "../../hooks/useCountdown";
+import { deleteAuction } from "../../api/auctionApis";
 
 interface Props {
-  id: number
-  title: string
-  description: string
-  currentPrice: number
-  endTime: string
+  id: number;
+  title: string;
+  description: string;
+  currentPrice: number | string;
+  endTime: string;
+  showActions?: boolean;
+  status?: string; //
 }
 
-export default function AuctionCard({ id, title, description, currentPrice, endTime }: Props) {
+export default function AuctionCard({
+  id,
+  title,
+  description,
+  currentPrice,
+  endTime,
+  showActions = false,
+}: Props) {
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // prevent Link click
+    e.preventDefault();
+
+    const confirmDelete = window.confirm("Delete this auction?");
+    if (!confirmDelete) return;
+
+    try {
+      await deleteAuction(id);
+      alert("Auction deleted");
+
+      window.location.reload(); // can optimize later
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete");
+    }
+  };
 
   return (
     <Link to={`/auction/${id}`}>
-    <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition p-6">
+      <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition p-6">
 
-      <div className="h-40 bg-gray-200 rounded-lg mb-4" />
+        {/* Image placeholder */}
+        <div className="h-40 bg-gray-200 rounded-lg mb-4" />
 
-      <h3 className="text-lg font-semibold mb-2">
-        {title}
-      </h3>
+        {/* Title */}
+        <h3 className="text-lg font-semibold mb-2">
+          {title}
+        </h3>
 
-      <p className="text-green-600 font-bold text-lg">
-        {description}
-      </p>
+        {/* Description */}
+        <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+          {description}
+        </p>
 
-      <p className="text-green-600 font-bold text-lg">
-        Rs. {currentPrice}
-      </p>
+        {/* Price */}
+        <p className="text-green-600 font-bold text-lg mb-1">
+          ₹ {currentPrice}
+        </p>
 
-      <p>
-        ⏳ {useCountdown(endTime)}
-      </p>
+        {/* Countdown (from old UI ) */}
+        <p className="text-sm mb-3">
+          ⏳ {useCountdown(endTime)}
+        </p>
 
-      <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
-        View Auction
-      </button>
+        {/* View Button */}
+        <div className="w-full bg-blue-600 text-white py-2 rounded-lg text-center hover:bg-blue-700">
+          View Auction
+        </div>
 
-    </div>
+        {/* ACTIONS (ONLY FOR OWNER) */}
+        {showActions && (
+          <div
+            className="flex gap-2 mt-3"
+            onClick={(e) => e.preventDefault()} // prevent parent link navigation
+          >
+            <Link
+              to={`/edit-auction/${id}`}
+              className="flex-1 text-center bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600"
+            >
+              Edit
+            </Link>
+
+            <button
+              onClick={handleDelete}
+              className="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700"
+            >
+              Delete
+            </button>
+          </div>
+        )}
+
+      </div>
     </Link>
   );
 }

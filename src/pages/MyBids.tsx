@@ -15,7 +15,6 @@ const MyBids = () => {
       ) : (
         bids.map((bid: any) => (
           <div key={bid.id}>
-            {/* <AuctionCard auction={bid.auction} /> */}
             <p>Your Bid: ₹{bid.amount}</p>
           </div>
         ))

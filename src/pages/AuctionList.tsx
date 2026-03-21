@@ -8,6 +8,8 @@ interface Auction {
   description: string;
   currentPrice: number;
   endTime: string;
+  status: string;
+  showActions?: boolean;
 }
 
 export default function AuctionList() {
@@ -36,19 +38,20 @@ export default function AuctionList() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
-
-      <h1 className="text-4xl font-bold text-center mb-10">
-        Live Auctions
-      </h1>
+      <h1 className="text-4xl font-bold text-center mb-10">Live Auctions</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
         {visibleAuctions.map((auction) => (
-          <AuctionCard key={auction.id} {...auction} />
+          <AuctionCard
+            key={auction.id}
+            id={auction.id}
+            title={auction.title}
+            description={auction.description}
+            currentPrice={auction.currentPrice}
+            endTime={auction.endTime}
+          />
         ))}
-
       </div>
-
     </div>
   );
 }

@@ -21,3 +21,13 @@ export const fetchBidHistory = async (auctionId: number) => {
   const response = await axiosClient.get(`/auctions/${auctionId}/bids`);
   return response.data;
 }
+
+export const deleteAuction = async (id: number) => {
+  const response = await axiosClient.delete(`/auctions/${id}`);
+  return response.data;
+};
+
+export const updateAuction = async (id: number, data: any) => {
+  const response = await axiosClient.put(`/auctions/${id}`, data);
+  return response.data;
+};
