@@ -1,5 +1,6 @@
 import { useMyAuctions } from "../hooks/useMyAuctions";
 import AuctionCard from "../Components/Auction/auctionCard";
+import Navbar from "../Components/layout/Navbar";
 
 
 const MyAuctions = () => {
@@ -10,8 +11,9 @@ const MyAuctions = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      
+    <div className="mb-4">
+      <Navbar />
+      <div className="container mx-auto px-4 py-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">My Auctions</h1>
@@ -64,6 +66,7 @@ const MyAuctions = () => {
           </div>
         </>
       )}
+      </div>
     </div>
   );
 };

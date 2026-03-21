@@ -7,6 +7,7 @@ export interface Auction {
   description: string;
   currentPrice: number;
   endTime: string;
+  status: string;
 }
 
 export default function useAuctions() {

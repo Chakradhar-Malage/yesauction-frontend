@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 
 export default function FeaturedAuctions() {
   const { auctions, loading } = useAuctions();
-
+  const activeAuctions = auctions.filter(
+    (auction) => auction.status === "ACTIVE"
+  )
   const [isGuest, setIsGuest] = useState(true);
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export default function FeaturedAuctions() {
 
   // const visibleAuctions = auctions.slice(0, 3);
   const lockedAuctions = auctions.slice(0, 3);
-
+  
   return (
     <section className="max-w-7xl mx-auto px-6 py-16">
 
@@ -34,24 +36,11 @@ export default function FeaturedAuctions() {
       {/* If logged in show ALL auctions */}
       {!isGuest && (
         <div className="grid md:grid-cols-3 gap-8">
-          {auctions.map((auction) => (
+          {activeAuctions.map((auction) => (
             <AuctionCard key={auction.id} {...auction} />
           ))}
         </div>
       )}
-
-      {/* Visible Auctions
-      <div className="grid md:grid-cols-3 gap-8">
-        {visibleAuctions.map((auction) => (
-          <AuctionCard
-            key={auction.id}
-            title={auction.title}
-            description={auction.description}
-            currentPrice={Number(auction.currentPrice)}
-            endTime={auction.endTime}
-          />
-        ))}
-      </div> */}
 
       {/* Locked Auctions (only for guests) */}
       {isGuest && lockedAuctions.length > 0 && (

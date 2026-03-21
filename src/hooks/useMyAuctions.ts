@@ -12,8 +12,9 @@ export const useMyAuctions = () => {
 
     getMyAuctions(page)
       .then((res) => {
-        setAuctions(res.data.content || []);
-        setTotalPages(res.data.totalPages || 0);
+        // console.log("My Auctions Response:", res.content);
+        setAuctions(res.content || []);
+        setTotalPages(res.totalPages || 0);
       })
       .finally(() => setLoading(false));
   }, [page]);
