@@ -31,3 +31,8 @@ export const updateAuction = async (id: number, data: any) => {
   const response = await axiosClient.put(`/auctions/${id}`, data);
   return response.data;
 };
+
+export const createAuction = async (data: any) => {
+  const response = await axiosClient.post("/auctions", data);
+  return response.data;
+};
