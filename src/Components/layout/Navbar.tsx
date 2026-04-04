@@ -127,6 +127,14 @@ export default function Navbar() {
                       My Bids
                     </Link>
 
+                    <Link
+                      to="/dashboard"
+                      className="block px-4 py-2 hover:bg-gray-100"   
+                    onClick={() => setProfileOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+
                     <button
                       onClick={() => {
                         localStorage.removeItem("token");

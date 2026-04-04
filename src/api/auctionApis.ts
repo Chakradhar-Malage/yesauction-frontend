@@ -36,3 +36,4 @@ export const createAuction = async (data: any) => {
   const response = await axiosClient.post("/auctions", data);
   return response.data;
 };
+
