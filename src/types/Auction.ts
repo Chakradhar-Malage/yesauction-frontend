@@ -5,4 +5,5 @@ export interface Auction {
   currentPrice: number;
   startingPrice: number;
   endTime: string;
+  category: string;
 }
