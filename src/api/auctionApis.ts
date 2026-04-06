@@ -12,6 +12,12 @@ export const fetchAuctionById = async (id: number) => {
   return response.data;
 }
 
+//fetch auctions by category
+export const fetchAuctionsByCategory = async (category: string) => {
+  const response = await axiosClient.get(`/auctions/category/${category}`);
+  return response.data;
+}
+
 export const placeBid = async (auctionId: number, amount: number) => {
   const response = await axiosClient.post(`/auctions/${auctionId}/bid`, { amount });
   return response.data; 
@@ -36,4 +42,6 @@ export const createAuction = async (data: any) => {
   const response = await axiosClient.post("/auctions", data);
   return response.data;
 };
+
+
 
