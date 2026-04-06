@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosClient from "../api/axiosClient";
 import AuctionCard from "../Components/Auction/auctionCard";
+import { useSearchParams } from "react-router-dom";
 
 interface Auction {
   id: number;
@@ -10,11 +11,14 @@ interface Auction {
   endTime: string;
   status: string;
   showActions?: boolean;
+  category: string;
 }
 
 export default function AuctionList() {
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category");
 
   const token = localStorage.getItem("token");
   const isGuest = !token;
@@ -33,8 +37,13 @@ export default function AuctionList() {
       </div>
     );
   }
-
-  const visibleAuctions = isGuest ? auctions.slice(0, 3) : auctions;
+  const filteredAuctions = category
+  ? auctions.filter((a) => a.category === category)
+  : auctions;
+  
+  const visibleAuctions = isGuest
+  ? filteredAuctions.slice(0, 3)
+  : filteredAuctions;
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
