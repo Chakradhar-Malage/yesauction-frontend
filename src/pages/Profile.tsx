@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useMyAuctions } from "../hooks/useMyAuctions";
 import { useMyBids } from "../hooks/useMyBids";
@@ -24,6 +25,7 @@ function Avatar({ username }: { username: string | undefined }) {
 }
 
 export default function Profile() {
+  const navigate = useNavigate();
   const { user, loading } = useCurrentUser();
   const { auctions } = useMyAuctions();
   const { bids } = useMyBids();
@@ -77,7 +79,9 @@ export default function Profile() {
           )}
         </div>
 
-        <button className="text-sm border px-4 py-2 rounded-lg hover:bg-gray-100 transition">
+        <button className="text-sm border px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+        onClick={() => navigate("/edit-profile")}
+        >
           Edit
         </button>
       </div>

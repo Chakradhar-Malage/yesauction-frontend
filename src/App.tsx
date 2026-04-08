@@ -12,6 +12,7 @@ import MyAuctions from "./pages/MyAuctions";
 import MyBids from "./pages/MyBids";
 import EditAuction from "./pages/EditAuction";
 import SellerDashboard from "./pages/SellerDashboard";
+import EditProfile from "./pages/EditProfile";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/my-bids" element={<MyBids />} />
           <Route path="/edit-auction/:id" element={<EditAuction />} />
           <Route path="/dashboard" element={<SellerDashboard />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
         </Route>
 
         {/* No layout */}

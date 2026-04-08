@@ -20,27 +20,22 @@ const SellerDashboard = () => {
         <StatsCards />
 
         {/* RECENT AUCTIONS */}
-        <h2 className="text-xl font-semibold mb-4 mt-8">
-          Recent Auctions
-        </h2>
+        <h2 className="text-xl font-semibold mb-4 mt-8">Recent Auctions</h2>
 
         {loading ? (
           <p>Loading...</p>
         ) : auctions.length === 0 ? (
-          <p className="text-gray-500">
-            No auctions created yet.
-          </p>
+          <p className="text-gray-500">No auctions created yet.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
             {auctions.slice(0, 3).map((auction: any) => (
-  <DashboardAuctionCard
-    key={auction.id}
-    id={auction.id}
-    title={auction.title}
-    currentPrice={auction.currentPrice}
-  />
-))}
+              <DashboardAuctionCard
+                key={auction.id}
+                id={auction.id}
+                title={auction.title}
+                currentPrice={auction.currentPrice}
+              />
+            ))}
           </div>
         )}
       </div>
