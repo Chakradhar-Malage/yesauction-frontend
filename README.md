@@ -1,1 +1,3 @@
-##I'm going to write this one, once it goes live in dev environment.
+##Dev phase.
+
+Functional Components are built. Category sections and document verfication/mobile verification still pending.
