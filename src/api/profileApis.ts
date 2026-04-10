@@ -1,3 +1,4 @@
+import exp from "constants";
 import axiosClient from "./axiosClient";
 
 export const getCurrentUser = async () => {
@@ -17,3 +18,8 @@ export const getMyAuctions = async (page: number) => {
   return response.data;
 };
 
+//update profile
+export const updateProfile = async (formData: { username: string; email: string }) => {
+  const response = await axiosClient.put("/users/me", formData);
+  return response.data;
+}
