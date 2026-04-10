@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
 
 const Sidebar = () => {
+  const { user } = useCurrentUser();
   return (
     <div className="w-64 bg-gray-900 text-white min-h-screen p-6 space-y-6">
       <h2 className="text-2xl font-bold">Seller Panel</h2>
@@ -18,9 +20,11 @@ const Sidebar = () => {
           My Bids
         </Link>
 
-        <Link to="/profile" className="hover:text-yellow-400">
-          Profile
-        </Link>
+        {user && (
+          <Link to={`/users/${user.username}`} className="hover:text-yellow-400">
+            Profile
+          </Link>
+        )}
       </nav>
     </div>
   );
