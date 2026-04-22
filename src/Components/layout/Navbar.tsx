@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import { useState, useRef, useEffect } from "react";
 
@@ -7,7 +7,9 @@ export default function Navbar() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [query, setQuery] = useState("");
 
+  const navigate = useNavigate();
   const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,29 +29,51 @@ export default function Navbar() {
     };
   }, []);
 
+  // 🔥 SEARCH HANDLER
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const trimmed = query.trim();
+    if (!trimmed) return;
+
+    navigate(`/auctions?search=${trimmed}`);
+    setMenuOpen(false);
+  };
+
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-6 py-4">
+        
         {/* TOP ROW */}
         <div className="flex items-center justify-between">
+          
           {/* Logo */}
           <Link to="/" className="text-2xl font-bold text-blue-600">
             YesAuction
           </Link>
 
-          {/* Search Bar */}
-          <div className="hidden md:flex flex-1 mx-8">
+          {/* DESKTOP SEARCH */}
+          <form
+            onSubmit={handleSearch}
+            className="hidden md:flex flex-1 mx-8"
+          >
             <input
               type="text"
               placeholder="Search auctions..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               className="w-full border rounded-l-lg px-4 py-2 focus:outline-none"
             />
-            <button className="bg-blue-600 text-white px-4 rounded-r-lg hover:bg-blue-700">
+
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-4 rounded-r-lg hover:bg-blue-700"
+            >
               Search
             </button>
-          </div>
+          </form>
 
-          {/* Desktop Right Menu */}
+          {/* DESKTOP RIGHT MENU */}
           <div className="hidden md:flex items-center gap-6">
             <Link to="/auctions" className="hover:text-blue-600">
               Auctions
@@ -57,12 +81,10 @@ export default function Navbar() {
 
             {user && (
               <>
-                {/* Watchlist */}
                 <Link to="/watchlist" className="hover:text-blue-600">
                   Watchlist
                 </Link>
 
-                {/* Notifications */}
                 <Link
                   to="/notifications"
                   className="text-xl hover:text-blue-600"
@@ -129,8 +151,8 @@ export default function Navbar() {
 
                     <Link
                       to="/dashboard"
-                      className="block px-4 py-2 hover:bg-gray-100"   
-                    onClick={() => setProfileOpen(false)}
+                      className="block px-4 py-2 hover:bg-gray-100"
+                      onClick={() => setProfileOpen(false)}
                     >
                       Dashboard
                     </Link>
@@ -160,13 +182,22 @@ export default function Navbar() {
         </div>
 
         {/* MOBILE SEARCH */}
-        <div className="mt-4 md:hidden">
+        <form onSubmit={handleSearch} className="mt-4 md:hidden flex">
           <input
             type="text"
             placeholder="Search auctions..."
-            className="w-full border rounded-lg px-4 py-2"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full border rounded-l-lg px-4 py-2"
           />
-        </div>
+
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 rounded-r-lg"
+          >
+            Search
+          </button>
+        </form>
 
         {/* MOBILE MENU */}
         {menuOpen && (
