@@ -1,37 +1,61 @@
 import { useState } from "react";
 import { useCreateAuction } from "../hooks/useCreateAuction";
 import { useNavigate } from "react-router-dom";
+import type { AuctionForm } from "../types/AuctionForm";
 
 const CreateAuction = () => {
   const { submitAuction, loading } = useCreateAuction();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<AuctionForm>({
     title: "",
     description: "",
     startingPrice: "",
     endTime: "",
+    image: null,
   });
 
-  const handleChange = (e: any) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // TEXT INPUT HANDLER
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = async (e: any) => {
+  //FILE INPUT HANDLER
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setForm({
+        ...form,
+        image: e.target.files[0],
+      });
+    }
+  };
+
+  //SUBMIT
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await submitAuction({
-      ...form,
-      startingPrice: Number(form.startingPrice),
-    });
+    const formData = new FormData();
+    formData.append("title", form.title);
+    formData.append("description", form.description);
+    formData.append("startingPrice", form.startingPrice);
+    formData.append("endTime", form.endTime);
 
+    if (form.image) {
+      formData.append("image", form.image);
+    }
+
+    await submitAuction(formData);
     navigate("/my-auctions");
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-2xl">
-        
         <h1 className="text-4xl font-bold text-gray-800 mb-2">
           Create Auction
         </h1>
@@ -75,9 +99,8 @@ const CreateAuction = () => {
             />
           </div>
 
-          {/* Price + Time Grid */}
+          {/* Price + Time */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-1">
                 Starting Price (₹)
@@ -106,7 +129,35 @@ const CreateAuction = () => {
                 required
               />
             </div>
+          </div>
 
+          {/* Image Upload */}
+          <div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+              id="fileUpload"
+            />
+
+            <label
+              htmlFor="fileUpload"
+              className="block cursor-pointer border-2 border-dashed border-gray-300 p-6 rounded-lg text-center hover:border-blue-500 transition"
+            >
+              {form.image ? form.image.name : "Click to upload image"}
+            </label>
+
+            {/* IMAGE PREVIEW */}
+            {form.image && (
+              <div className="mt-4">
+                <img
+                  src={URL.createObjectURL(form.image)}
+                  alt="preview"
+                  className="w-full max-h-64 object-cover rounded-lg border"
+                />
+              </div>
+            )}
           </div>
 
           {/* Button */}
@@ -114,9 +165,10 @@ const CreateAuction = () => {
             type="submit"
             disabled={loading}
             className={`w-full py-3 rounded-lg font-semibold text-white transition 
-              ${loading 
-                ? "bg-blue-400 cursor-not-allowed" 
-                : "bg-blue-600 hover:bg-blue-700 active:scale-[0.98]"
+              ${
+                loading
+                  ? "bg-blue-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 active:scale-[0.98]"
               }`}
           >
             {loading ? "Creating Auction..." : "Create Auction"}
