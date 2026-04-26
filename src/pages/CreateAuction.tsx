@@ -29,60 +29,100 @@ const CreateAuction = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-10">
-      <h1 className="text-3xl font-bold mb-6">Create Auction</h1>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-2xl">
+        
+        <h1 className="text-4xl font-bold text-gray-800 mb-2">
+          Create Auction
+        </h1>
+        <p className="text-gray-500 mb-8">
+          Fill in the details to start your auction
+        </p>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 bg-white p-6 rounded-xl shadow"
-      >
-        <input
-          type="text"
-          name="title"
-          placeholder="Auction Title"
-          value={form.title}
-          onChange={handleChange}
-          className="w-full border p-3 rounded"
-          required
-        />
-
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-          className="w-full border p-3 rounded"
-          rows={4}
-          required
-        />
-
-        <input
-          type="number"
-          name="startingPrice"
-          placeholder="Starting Price"
-          value={form.startingPrice}
-          onChange={handleChange}
-          className="w-full border p-3 rounded"
-          required
-        />
-
-        <input
-          type="datetime-local"
-          name="endTime"
-          value={form.endTime}
-          onChange={handleChange}
-          className="w-full border p-3 rounded"
-          required
-        />
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 text-white px-6 py-3 rounded w-full"
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-8 rounded-2xl shadow-lg space-y-6"
         >
-          {loading ? "Creating..." : "Create Auction"}
-        </button>
-      </form>
+          {/* Title */}
+          <div>
+            <label className="block text-xl font-medium text-gray-700 mb-1">
+              Auction Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              placeholder="e.g. Vintage Watch"
+              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+              required
+            />
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-xl font-medium text-gray-700 mb-1">
+              Description
+            </label>
+            <textarea
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              placeholder="Describe your item..."
+              rows={4}
+              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+              required
+            />
+          </div>
+
+          {/* Price + Time Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <div>
+              <label className="block text-lg font-medium text-gray-700 mb-1">
+                Starting Price (₹)
+              </label>
+              <input
+                type="number"
+                name="startingPrice"
+                value={form.startingPrice}
+                onChange={handleChange}
+                placeholder="1000"
+                className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-lg font-medium text-gray-700 mb-1">
+                End Time
+              </label>
+              <input
+                type="datetime-local"
+                name="endTime"
+                value={form.endTime}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                required
+              />
+            </div>
+
+          </div>
+
+          {/* Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-3 rounded-lg font-semibold text-white transition 
+              ${loading 
+                ? "bg-blue-400 cursor-not-allowed" 
+                : "bg-blue-600 hover:bg-blue-700 active:scale-[0.98]"
+              }`}
+          >
+            {loading ? "Creating Auction..." : "Create Auction"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
