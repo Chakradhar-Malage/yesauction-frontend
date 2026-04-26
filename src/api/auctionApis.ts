@@ -38,7 +38,14 @@ export const updateAuction = async (id: number, data: any) => {
   return response.data;
 };
 
-export const createAuction = async (data: any) => {
-  const response = await axiosClient.post("/auctions", data);
+export const createAuction = async (data: FormData) => {
+  const response = await axiosClient.post("/auctions", data, 
+    {
+      headers : {
+        "Content-Type": "multipart/form-data",
+      }
+    }
+  );
+
   return response.data;
 };
