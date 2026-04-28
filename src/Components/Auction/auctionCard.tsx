@@ -10,6 +10,7 @@ interface Props {
   endTime: string;
   showActions?: boolean;
   status?: string; //
+  image?: string;
 }
 
 export default function AuctionCard({
@@ -18,8 +19,17 @@ export default function AuctionCard({
   description,
   currentPrice,
   endTime,
+  image,
   showActions = false,
 }: Props) {
+
+  const getImageSrc = () => {
+    if (!image) return "/placeholder.png";
+
+    if (image.startsWith("http")) return image;
+
+    return `http://localhost:8080/uploads/${image}`;
+  };
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation(); // prevent Link click
@@ -44,7 +54,11 @@ export default function AuctionCard({
       <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition p-6">
 
         {/* Image placeholder */}
-        <div className="h-40 bg-gray-200 rounded-lg mb-4" />
+        <img
+          src={getImageSrc()}
+          alt={title}
+          className="h-40 w-full object-cover rounded-lg mb-4"
+        />
 
         {/* Title */}
         <h3 className="text-lg font-semibold mb-2">

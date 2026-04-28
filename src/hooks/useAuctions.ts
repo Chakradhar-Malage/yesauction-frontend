@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { fetchAuctions } from "../api/auctionApis";
 
 export interface Auction {
+  image: any;
   id: number;
   title: string;
   description: string;
   currentPrice: number;
   endTime: string;
   status: string;
+  imageUrl?: string | null;
 }
 
 export default function useAuctions() {
