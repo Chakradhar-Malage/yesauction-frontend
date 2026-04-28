@@ -86,7 +86,21 @@ export default function AuctionDetail() {
     <div className="max-w-6xl mx-auto px-6 py-10">
       <div className="grid md:grid-cols-2 gap-10">
         {/* IMAGE */}
-        <div className="h-96 bg-gray-200 rounded-xl"></div>
+        <div>
+          {/* Main Image */}
+          <img
+            src={auction.imageUrl || "/placeholder.png"}
+            alt="auction"
+            className="h-80 w-full object-cover rounded-xl mb-4"
+          />
+
+          {/* Thumbnails */}
+          <img
+            src={auction.imageUrl || "/placeholder.png"}
+            alt="auction"
+            className="h-80 w-full object-cover rounded-xl mb-4"
+          />
+        </div>
 
         {/* DETAILS */}
         <div>

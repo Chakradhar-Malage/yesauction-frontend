@@ -6,4 +6,5 @@ export interface Auction {
   startingPrice: number;
   endTime: string;
   category: string;
+  imageUrl?: string | null;
 }

@@ -17,4 +17,5 @@ export interface AuctionDetailDto {
   currentPrice: number;
   startingPrice: number;
   endTime: string;
+  imageUrl?: string | null;
 }
