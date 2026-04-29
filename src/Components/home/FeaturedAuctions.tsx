@@ -43,7 +43,7 @@ export default function FeaturedAuctions() {
               description={auction.description}
               currentPrice={auction.currentPrice}
               endTime={auction.endTime}
-              image={auction.imageUrl || undefined}
+              imageUrl={auction.imageUrl}
             />
           ))}
         </div>

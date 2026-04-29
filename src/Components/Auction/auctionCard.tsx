@@ -10,7 +10,7 @@ interface Props {
   endTime: string;
   showActions?: boolean;
   status?: string; //
-  image?: string;
+  imageUrl?: string | null;
 }
 
 export default function AuctionCard({
@@ -19,16 +19,16 @@ export default function AuctionCard({
   description,
   currentPrice,
   endTime,
-  image,
+  imageUrl,
   showActions = false,
 }: Props) {
 
   const getImageSrc = () => {
-    if (!image) return "/placeholder.png";
+    if (!imageUrl) return "/placeholder.png";
 
-    if (image.startsWith("http")) return image;
+    if (imageUrl.startsWith("http")) return imageUrl;
 
-    return `http://localhost:8080/uploads/${image}`;
+    return `http://localhost:8081/uploads/${imageUrl}`;
   };
 
   const handleDelete = async (e: React.MouseEvent) => {
@@ -48,7 +48,7 @@ export default function AuctionCard({
       alert("Failed to delete");
     }
   };
-
+  console.log("IMAGE URL:", getImageSrc());
   return (
     <Link to={`/auction/${id}`}>
       <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition p-6">
