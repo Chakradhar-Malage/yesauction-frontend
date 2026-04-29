@@ -131,7 +131,16 @@ export default function AuctionDetailPage() {
         {/* IMAGE */}
 
         <div className="h-96 bg-gray-200 rounded-xl flex items-center justify-center">
-          <span className="text-gray-500">Auction Image</span>
+          <img
+            src={
+              auction.imageUrl
+                ? `http://localhost:8081/uploads/${auction.imageUrl}`
+                : "/placeholder.png"
+            }
+            alt={auction.title}
+            className="h-80 w-full object-cover rounded-xl mb-4"
+          />
+          {/* <span className="text-gray-500">Auction Image</span> */}
         </div>
 
         {/* DETAILS */}

@@ -14,6 +14,7 @@ interface Auction {
   endTime: string;
   status: string;
   category: string;
+  imageUrl?: string | null;
 }
 
 export default function AuctionList() {
