@@ -88,6 +88,7 @@ const MyAuctions = () => {
                     description={auction.description}
                     currentPrice={auction.currentPrice}
                     endTime={auction.endTime}
+                    imageUrl={auction.imageUrl}
                     showActions={true} // show edit/delete buttons
                   />
                 </div>
