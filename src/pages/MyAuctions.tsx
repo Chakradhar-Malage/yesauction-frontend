@@ -1,5 +1,6 @@
 import { useMyAuctions } from "../hooks/useMyAuctions";
 import AuctionCard from "../Components/Auction/auctionCard";
+import Navbar from "../Components/layout/Navbar";
 
 const MyAuctions = () => {
   const { auctions, page, setPage, totalPages, loading } = useMyAuctions();
@@ -20,8 +21,9 @@ const MyAuctions = () => {
   const ended = total - active;
 
   return (
+    
+      <><Navbar />
     <div className="max-w-7xl mx-auto px-6 py-8">
-
       {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Seller Dashboard</h1>
@@ -67,17 +69,14 @@ const MyAuctions = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
             {auctions.map((auction: any) => {
-              const isActive =
-                auction.status === "ACTIVE";
+              const isActive = auction.status === "ACTIVE";
 
               return (
                 <div key={auction.id} className="relative">
 
                   {/* STATUS BADGE */}
                   <span
-                    className={`absolute top-3 left-3 text-xs px-2 py-1 rounded text-white ${
-                      isActive ? "bg-green-600" : "bg-gray-600"
-                    }`}
+                    className={`absolute top-3 left-3 text-xs px-2 py-1 rounded text-white ${isActive ? "bg-green-600" : "bg-gray-600"}`}
                   >
                     {isActive ? "LIVE" : "ENDED"}
                   </span>
@@ -123,7 +122,7 @@ const MyAuctions = () => {
           </div>
         </>
       )}
-    </div>
+    </div></>
   );
 };
 
