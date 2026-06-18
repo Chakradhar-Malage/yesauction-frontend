@@ -29,7 +29,7 @@ export default function Navbar() {
     };
   }, []);
 
-  // 🔥 SEARCH HANDLER
+  // SEARCH HANDLER
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
