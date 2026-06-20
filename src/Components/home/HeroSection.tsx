@@ -28,7 +28,7 @@ export default function HeroSection() {
     <section className="bg-gray-900 text-white py-24">
       <div className="max-w-7xl mx-auto text-center px-6">
         <h1 className="text-5xl font-bold mb-6">
-          Discover Rare Items & Win Auctions
+          Discover Rare Items & Win them in Auctions
         </h1>
 
         <p className="text-xl text-gray-300 mb-8">
