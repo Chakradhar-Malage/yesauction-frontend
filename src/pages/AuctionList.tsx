@@ -15,6 +15,19 @@ interface Auction {
   imageUrl?: string | null;
 }
 
+const categories = [
+  { label: "Watches", value: "WATCHES" },
+  { label: "Jewelry", value: "JEWELRY" },
+  { label: "Art", value: "ART" },
+  { label: "Electronics", value: "ELECTRONICS" },
+  { label: "Real Estate", value: "REAL_ESTATE" },
+  { label: "Collectibles", value: "COLLECTIBLES" },
+  { label: "Vehicles", value: "VEHICLES" },
+  { label: "Fashion", value: "FASHION" },
+  { label: "Antiques", value: "ANTIQUES" },
+  { label: "Other", value: "OTHER" },
+];
+
 export default function AuctionList() {
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,12 +46,14 @@ export default function AuctionList() {
       try {
         setLoading(true);
         setError(null);
+        
 
         const data = category
           ? await fetchAuctionsByCategory(category)
           : await fetchAuctions();
 
         setAuctions(data);
+        console.log(data);
       } catch (err) {
         console.error(err);
         setError("Failed to load auctions. Please try again.");
@@ -77,24 +92,66 @@ export default function AuctionList() {
         <div className="w-64 bg-white shadow-md rounded-xl p-5">
           <h2 className="font-bold text-lg mb-4">Filters</h2>
 
-          <p className="mb-2 font-medium">Category</p>
-          <ul className="space-y-2">
-            {["Watches", "Jewelry", "Gaming", "Art", "Real Estate"].map(
-              (cat) => (
-                <li
-                  key={cat}
-                  className={`cursor-pointer hover:text-blue-500 ${
-                    category === cat ? "text-blue-600 font-semibold" : ""
-                  }`}
-                  onClick={() => navigate(`/auctions?category=${cat}`)}
-                >
-                  {cat}
-                </li>
-              ),
-            )}
-          </ul>
-        </div>
+          <p className="mb-3 font-medium">Category</p>
 
+          <div className="space-y-3">
+            {categories.map((cat) => {
+              const isSelected = category === cat.value;
+
+              return (
+                <label
+                  key={cat.value}
+                  className="flex items-center gap-3 cursor-pointer group"
+                >
+                  <div
+                    onClick={() =>
+                      navigate(
+                        isSelected
+                          ? "/auctions"
+                          : `/auctions?category=${encodeURIComponent(cat.value)}`,
+                      )
+                    }
+                    className={`
+            w-5 h-5 rounded border-2 flex items-center justify-center
+            transition-all duration-200
+            ${
+              isSelected
+                ? "bg-green-500 border-green-500"
+                : "border-gray-400 group-hover:border-green-500"
+            }
+          `}
+                  >
+                    {isSelected && (
+                      <svg
+                        className="w-3 h-3 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </div>
+
+                  <span
+                    className={`transition-colors ${
+                      isSelected
+                        ? "text-green-600 font-semibold"
+                        : "text-gray-700 group-hover:text-green-600"
+                    }`}
+                  >
+                    {cat.label}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
         {/* RIGHT SIDE */}
         <div className="flex-1">
           <h1 className="text-4xl font-bold mb-6">
