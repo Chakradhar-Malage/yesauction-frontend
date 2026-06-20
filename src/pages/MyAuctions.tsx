@@ -26,7 +26,7 @@ const MyAuctions = () => {
     <div className="max-w-7xl mx-auto px-6 py-8">
       {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Seller Dashboard</h1>
+        <h1 className="text-3xl font-bold">Manage Your Auctions</h1>
       </div>
 
       {/* STATS */}

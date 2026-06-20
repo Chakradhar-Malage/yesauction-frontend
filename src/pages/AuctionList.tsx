@@ -76,11 +76,11 @@ export default function AuctionList() {
 
   return (
     <div>
-    <Navbar />
-    <div className="max-w-7xl mx-auto px-6 py-10 flex gap-8">
-      {/* LEFT FILTER PANEL */}
-      <div className="w-64 bg-white shadow-md rounded-xl p-5">
-        <h2 className="font-bold text-lg mb-4">Filters</h2>
+      <Navbar />
+      <div className="max-w-7xl mx-auto px-6 py-10 flex gap-8">
+        {/* LEFT FILTER PANEL */}
+        <div className="w-64 bg-white shadow-md rounded-xl p-5">
+          <h2 className="font-bold text-lg mb-4">Filters</h2>
 
         <p className="mb-2 font-medium">Category</p>
         <ul className="space-y-2">
