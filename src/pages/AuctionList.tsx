@@ -2,10 +2,7 @@ import { useEffect, useState } from "react";
 import AuctionCard from "../Components/Auction/auctionCard";
 import Navbar from "../Components/layout/Navbar";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import {
-  fetchAuctions,
-  fetchAuctionsByCategory,
-} from "../api/auctionApis";
+import { fetchAuctions, fetchAuctionsByCategory } from "../api/auctionApis";
 
 interface Auction {
   id: number;
@@ -54,9 +51,7 @@ export default function AuctionList() {
   }, [category]);
 
   // Limit auctions for guest users
-  const visibleAuctions = isGuest
-    ? auctions.slice(0, 3)
-    : auctions;
+  const visibleAuctions = isGuest ? auctions.slice(0, 3) : auctions;
 
   if (loading) {
     return (
@@ -82,51 +77,49 @@ export default function AuctionList() {
         <div className="w-64 bg-white shadow-md rounded-xl p-5">
           <h2 className="font-bold text-lg mb-4">Filters</h2>
 
-        <p className="mb-2 font-medium">Category</p>
-        <ul className="space-y-2">
-          {["Watches", "Jewelry", "Gaming", "Art", "Real Estate"].map(
-            (cat) => (
-              <li
-                key={cat}
-                className={`cursor-pointer hover:text-blue-500 ${
-                  category === cat ? "text-blue-600 font-semibold" : ""
-                }`}
-                onClick={() =>
-                  navigate(`/auctions?category=${cat}`)
-                }
-              >
-                {cat}
-              </li>
-            )
+          <p className="mb-2 font-medium">Category</p>
+          <ul className="space-y-2">
+            {["Watches", "Jewelry", "Gaming", "Art", "Real Estate"].map(
+              (cat) => (
+                <li
+                  key={cat}
+                  className={`cursor-pointer hover:text-blue-500 ${
+                    category === cat ? "text-blue-600 font-semibold" : ""
+                  }`}
+                  onClick={() => navigate(`/auctions?category=${cat}`)}
+                >
+                  {cat}
+                </li>
+              ),
+            )}
+          </ul>
+        </div>
+
+        {/* RIGHT SIDE */}
+        <div className="flex-1">
+          <h1 className="text-4xl font-bold mb-6">
+            {category ? `${category} Auctions` : "Live Auctions"}
+          </h1>
+
+          {/* Guest Notice */}
+          {isGuest && auctions.length > 3 && (
+            <p className="mb-4 text-sm text-gray-500">
+              Showing limited auctions. Login to see all.
+            </p>
           )}
-        </ul>
+
+          {/* Empty State */}
+          {visibleAuctions.length === 0 ? (
+            <p className="text-gray-500">No auctions found.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {visibleAuctions.map((auction) => (
+                <AuctionCard key={auction.id} {...auction} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-
-      {/* RIGHT SIDE */}
-      <div className="flex-1">
-        <h1 className="text-4xl font-bold mb-6">
-          {category ? `${category} Auctions` : "Live Auctions"}
-        </h1>
-
-        {/* Guest Notice */}
-        {isGuest && auctions.length > 3 && (
-          <p className="mb-4 text-sm text-gray-500">
-            Showing limited auctions. Login to see all.
-          </p>
-        )}
-
-        {/* Empty State */}
-        {visibleAuctions.length === 0 ? (
-          <p className="text-gray-500">No auctions found.</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {visibleAuctions.map((auction) => (
-              <AuctionCard key={auction.id} {...auction} />
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
     </div>
   );
 }
