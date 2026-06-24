@@ -41,6 +41,25 @@ export const updateAuction = async (id: number, data: any) => {
   return response.data;
 };
 
+
+//update auction image api
+export const updateAuctionImage = async (
+  id: number,
+  file: File
+) => {
+  const formData = new FormData();
+
+  formData.append("image", file);
+
+  const response = await axiosClient.post(
+    `/auctions/${id}/image`,
+    formData
+  );
+
+  return response.data;
+};
+
+
 export const createAuction = async (data: FormData) => {
   const response = await axiosClient.post("/auctions", data, 
     {
