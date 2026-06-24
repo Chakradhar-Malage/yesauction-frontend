@@ -5,7 +5,6 @@ import { fetchAuctionById, updateAuction } from "../api/auctionApis";
 interface AuctionForm {
   title: string;
   description: string;
-  currentPrice: number;
   endTime: string;
 }
 
@@ -16,26 +15,25 @@ export default function EditAuction() {
   const [form, setForm] = useState<AuctionForm>({
     title: "",
     description: "",
-    currentPrice: 0,
     endTime: "",
   });
 
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-  // Fetch auction data
   useEffect(() => {
     if (!id) return;
 
-    const fetchAuction = async () => {
+    const loadAuction = async () => {
       try {
         const data = await fetchAuctionById(Number(id));
 
         setForm({
-          title: data.title,
-          description: data.description,
-          currentPrice: data.currentPrice,
-          endTime: data.endTime.slice(0, 16), // for datetime-local input
+          title: data.title || "",
+          description: data.description || "",
+          endTime: data.endTime
+            ? data.endTime.slice(0, 16)
+            : "",
         });
       } catch (err) {
         console.error(err);
@@ -45,23 +43,18 @@ export default function EditAuction() {
       }
     };
 
-    fetchAuction();
+    loadAuction();
   }, [id]);
 
-  // Handle input change
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.name === "currentPrice"
-          ? Number(e.target.value)
-          : e.target.value,
-    });
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  // Submit update
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -70,32 +63,50 @@ export default function EditAuction() {
     setUpdating(true);
 
     try {
+      console.log("Submitting:", form);
+
       await updateAuction(Number(id), form);
+
       alert("Auction updated successfully");
 
-      navigate("/my-auctions"); // redirect after update
-    } catch (err) {
+      navigate("/my-auctions");
+    } catch (err: any) {
       console.error(err);
-      alert("Update failed");
+
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.response?.data ||
+        "Update failed";
+
+      alert(errorMessage);
     } finally {
       setUpdating(false);
     }
   };
 
-  // Loading UI
   if (loading) {
-    return <p className="text-center mt-10">Loading auction...</p>;
+    return (
+      <p className="text-center mt-10 text-lg">
+        Loading auction...
+      </p>
+    );
   }
 
   return (
     <div className="max-w-2xl mx-auto mt-10 bg-white p-6 rounded-xl shadow">
-      <h2 className="text-2xl font-bold mb-6">Edit Auction</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        Edit Auction
+      </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4"
+      >
         {/* Title */}
         <div>
-          <label className="block mb-1 font-medium">Title</label>
+          <label className="block mb-1 font-medium">
+            Title
+          </label>
           <input
             type="text"
             name="title"
@@ -108,33 +119,23 @@ export default function EditAuction() {
 
         {/* Description */}
         <div>
-          <label className="block mb-1 font-medium">Description</label>
+          <label className="block mb-1 font-medium">
+            Description
+          </label>
           <textarea
             name="description"
             value={form.description}
             onChange={handleChange}
             className="w-full border p-2 rounded"
             rows={4}
-            required
-          />
-        </div>
-
-        {/* Price */}
-        <div>
-          <label className="block mb-1 font-medium">Current Price</label>
-          <input
-            type="number"
-            name="currentPrice"
-            value={form.currentPrice}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-            required
           />
         </div>
 
         {/* End Time */}
         <div>
-          <label className="block mb-1 font-medium">End Time</label>
+          <label className="block mb-1 font-medium">
+            End Time
+          </label>
           <input
             type="datetime-local"
             name="endTime"
@@ -149,7 +150,7 @@ export default function EditAuction() {
         <button
           type="submit"
           disabled={updating}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
         >
           {updating ? "Updating..." : "Update Auction"}
         </button>
