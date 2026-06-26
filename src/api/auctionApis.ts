@@ -41,22 +41,24 @@ export const updateAuction = async (id: number, data: any) => {
   return response.data;
 };
 
-
-//update auction image api
+//edit image update
 export const updateAuctionImage = async (
   id: number,
   file: File
 ) => {
   const formData = new FormData();
-
   formData.append("image", file);
 
-  const response = await axiosClient.post(
+  return axiosClient.post(
     `/auctions/${id}/image`,
-    formData
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      transformRequest: [(data) => data],
+    }
   );
-
-  return response.data;
 };
 
 

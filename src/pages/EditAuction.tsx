@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchAuctionById, updateAuction } from "../api/auctionApis";
+import { fetchAuctionById, updateAuction, updateAuctionImage } from "../api/auctionApis";
 
 interface AuctionForm {
   title: string;
@@ -20,6 +20,15 @@ export default function EditAuction() {
 
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
+  const handleImageChange = (
+  e: React.ChangeEvent<HTMLInputElement>
+) => {
+  if (e.target.files && e.target.files[0]) {
+    setImageFile(e.target.files[0]);
+  }
+};
 
   useEffect(() => {
     if (!id) return;
@@ -65,10 +74,18 @@ export default function EditAuction() {
     try {
       console.log("Submitting:", form);
 
+      // await updateAuction(Number(id), form);
+      
+      // alert("Auction updated successfully");
+
       await updateAuction(Number(id), form);
 
-      alert("Auction updated successfully");
+      // Upload image only if user selected one
+      if (imageFile) {
+        await updateAuctionImage(Number(id), imageFile);
+      }
 
+      alert("Auction updated successfully");
       navigate("/my-auctions");
     } catch (err: any) {
       console.error(err);
@@ -130,7 +147,24 @@ export default function EditAuction() {
             rows={4}
           />
         </div>
+        <div>
+          <label className="block mb-1 font-medium">
+            Auction Image
+          </label>
 
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="w-full border p-2 rounded"
+          />
+
+          {imageFile && (
+            <p className="text-sm text-gray-500 mt-1">
+              Selected: {imageFile.name}
+            </p>
+          )}
+        </div>
         {/* End Time */}
         <div>
           <label className="block mb-1 font-medium">
