@@ -1,6 +1,4 @@
-import AuctionCard from "../Components/Auction/auctionCard";
 import axiosClient from "./axiosClient";
-
 
 export const fetchAuctions = async () => {
   const response = await axiosClient.get("/auctions");
@@ -10,26 +8,24 @@ export const fetchAuctions = async () => {
 export const fetchAuctionById = async (id: number) => {
   const response = await axiosClient.get(`/auctions/${id}`);
   return response.data;
-}
+};
 
-//fetch auctions by category
 export const fetchAuctionsByCategory = async (category: string) => {
   const response = await axiosClient.get("/auctions", {
     params: { category },
   });
-
   return response.data.content;
 };
 
 export const placeBid = async (auctionId: number, amount: number) => {
   const response = await axiosClient.post(`/auctions/${auctionId}/bid`, { amount });
-  return response.data; 
-}
+  return response.data;
+};
 
 export const fetchBidHistory = async (auctionId: number) => {
   const response = await axiosClient.get(`/auctions/${auctionId}/bids`);
   return response.data;
-}
+};
 
 export const deleteAuction = async (id: number) => {
   const response = await axiosClient.delete(`/auctions/${id}`);
@@ -41,35 +37,21 @@ export const updateAuction = async (id: number, data: any) => {
   return response.data;
 };
 
-//edit image update
-export const updateAuctionImage = async (
-  id: number,
-  file: File
-) => {
+export const updateAuctionImage = async (id: number, file: File) => {
   const formData = new FormData();
   formData.append("image", file);
 
-  return axiosClient.post(
-    `/auctions/${id}/image`,
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      transformRequest: [(data) => data],
-    }
-  );
+  // Add this temporarily
+  console.log("FormData entries:");
+  for (const [key, value] of Array.from(formData.entries())) {
+    console.log(key, value);
+  }
+
+  const response = await axiosClient.post(`/auctions/${id}/image`, formData);
+  return response.data;
 };
 
-
 export const createAuction = async (data: FormData) => {
-  const response = await axiosClient.post("/auctions", data, 
-    {
-      headers : {
-        "Content-Type": "multipart/form-data",
-      }
-    }
-  );
-
+  const response = await axiosClient.post("/auctions", data);
   return response.data;
 };
