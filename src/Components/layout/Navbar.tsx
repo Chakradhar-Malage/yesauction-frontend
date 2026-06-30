@@ -124,7 +124,7 @@ export default function Navbar() {
                 </button>
 
                 {profileOpen && (
-                  <div className="absolute right-0 mt-3 w-48 bg-white border rounded-lg shadow-lg overflow-hidden">
+                  <div className="absolute left-0 mt-3 w-48 bg-white border rounded-lg shadow-lg overflow-hidden">
                     <Link
                       to={`/users/${user.username}`}
                       className="block px-4 py-2 hover:bg-gray-100"
@@ -133,21 +133,21 @@ export default function Navbar() {
                       Profile
                     </Link>
 
-                    <Link
+                    {/* <Link
                       to="/my-auctions"
                       className="block px-4 py-2 hover:bg-gray-100"
                       onClick={() => setProfileOpen(false)}
                     >
                       My Auctions
-                    </Link>
+                    </Link> */}
 
-                    <Link
+                    {/* <Link
                       to="/my-bids"
                       className="block px-4 py-2 hover:bg-gray-100"
                       onClick={() => setProfileOpen(false)}
                     >
                       My Bids
-                    </Link>
+                    </Link> */}
 
                     <Link
                       to="/dashboard"
