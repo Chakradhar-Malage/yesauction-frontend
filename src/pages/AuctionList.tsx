@@ -46,14 +46,12 @@ export default function AuctionList() {
       try {
         setLoading(true);
         setError(null);
-        
 
         const data = category
           ? await fetchAuctionsByCategory(category)
           : await fetchAuctions();
 
         setAuctions(data);
-        console.log(data);
       } catch (err) {
         console.error(err);
         setError("Failed to load auctions. Please try again.");
@@ -65,7 +63,6 @@ export default function AuctionList() {
     loadAuctions();
   }, [category]);
 
-  // Limit auctions for guest users
   const visibleAuctions = isGuest ? auctions.slice(0, 3) : auctions;
 
   if (loading) {
@@ -88,13 +85,13 @@ export default function AuctionList() {
     <div>
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 py-10 flex gap-8">
-        {/* LEFT FILTER PANEL */}
-        <div className="w-64 bg-white shadow-md rounded-xl p-5">
-          <h2 className="font-bold text-lg mb-4">Filters</h2>
+        {/* LEFT FILTER PANEL - COMPACT */}
+        <div className="w-64 bg-white shadow-md rounded-xl p-6 h-fit">
+          <h2 className="font-bold text-lg mb-5">Filters</h2>
 
-          <p className="mb-3 font-medium">Category</p>
+          <p className="mb-3 font-medium text-gray-700">Category</p>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {categories.map((cat) => {
               const isSelected = category === cat.value;
 
@@ -112,14 +109,14 @@ export default function AuctionList() {
                       )
                     }
                     className={`
-            w-5 h-5 rounded border-2 flex items-center justify-center
-            transition-all duration-200
-            ${
-              isSelected
-                ? "bg-green-500 border-green-500"
-                : "border-gray-400 group-hover:border-green-500"
-            }
-          `}
+                      w-5 h-5 rounded border-2 flex items-center justify-center
+                      transition-all duration-200 flex-shrink-0
+                      ${
+                        isSelected
+                          ? "bg-green-500 border-green-500"
+                          : "border-gray-400 group-hover:border-green-500"
+                      }
+                    `}
                   >
                     {isSelected && (
                       <svg
@@ -152,20 +149,19 @@ export default function AuctionList() {
             })}
           </div>
         </div>
+
         {/* RIGHT SIDE */}
         <div className="flex-1">
           <h1 className="text-4xl font-bold mb-6">
             {category ? `${category} Auctions` : "Live Auctions"}
           </h1>
 
-          {/* Guest Notice */}
           {isGuest && auctions.length > 3 && (
             <p className="mb-4 text-sm text-gray-500">
               Showing limited auctions. Login to see all.
             </p>
           )}
 
-          {/* Empty State */}
           {visibleAuctions.length === 0 ? (
             <p className="text-gray-500">No auctions found.</p>
           ) : (
