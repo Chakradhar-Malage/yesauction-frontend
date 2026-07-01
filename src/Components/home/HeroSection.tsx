@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import {useCurrentUser} from "../../hooks/useCurrentUser";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
 
 export default function HeroSection() {
   const navigate = useNavigate();
@@ -36,14 +36,14 @@ export default function HeroSection() {
         </p>
 
         <div className="flex justify-center gap-4">
-          <button className="bg-blue-600 px-6 py-3 rounded-lg hover:bg-blue-700">
+          <button className="w-44 bg-blue-600 py-3 rounded-lg hover:bg-blue-700">
             Explore Auctions
           </button>
 
           <button
             onClick={handleStartSelling}
             disabled={loading}
-            className="bg-white text-black px-6 py-3 rounded-lg disabled:opacity-50"
+            className="w-44 bg-white text-black py-3 rounded-lg disabled:opacity-50"
           >
             {loading ? "Checking..." : "Start Selling"}
           </button>
