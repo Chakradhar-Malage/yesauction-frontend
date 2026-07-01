@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Clock } from "lucide-react"; // ← Proper icon library
 import useCountdown from "../../hooks/useCountdown";
 import { deleteAuction } from "../../api/auctionApis";
 
@@ -9,7 +10,7 @@ interface Props {
   currentPrice: number | string;
   endTime: string;
   showActions?: boolean;
-  status?: string; //
+  status?: string;
   imageUrl?: string | null;
 }
 
@@ -25,14 +26,12 @@ export default function AuctionCard({
 
   const getImageSrc = () => {
     if (!imageUrl) return "/placeholder.png";
-
     if (imageUrl.startsWith("http")) return imageUrl;
-
     return `http://localhost:8081/uploads/${imageUrl}`;
   };
 
   const handleDelete = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // prevent Link click
+    e.stopPropagation();
     e.preventDefault();
 
     const confirmDelete = window.confirm("Delete this auction?");
@@ -41,19 +40,18 @@ export default function AuctionCard({
     try {
       await deleteAuction(id);
       alert("Auction deleted");
-
-      window.location.reload(); // can optimize later
+      window.location.reload(); // TODO: Better state management later
     } catch (err) {
       console.error(err);
       alert("Failed to delete");
     }
   };
-  console.log("IMAGE URL:", getImageSrc());
-  return (
-    <Link to={`/auction/${id}`}>
-      <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition p-6">
 
-        {/* Image placeholder */}
+  return (
+    <Link to={`/auction/${id}`} className="block">
+      <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 h-full flex flex-col">
+
+        {/* Image */}
         <img
           src={getImageSrc()}
           alt={title}
@@ -61,12 +59,12 @@ export default function AuctionCard({
         />
 
         {/* Title */}
-        <h3 className="text-lg font-semibold mb-2">
+        <h3 className="text-lg font-semibold mb-2 line-clamp-2">
           {title}
         </h3>
 
-        {/* Description */}
-        <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+        {/* Description - Now limited to 1 line with ellipsis */}
+        <p className="text-gray-600 text-sm mb-3 line-clamp-1 flex-1">
           {description}
         </p>
 
@@ -75,38 +73,38 @@ export default function AuctionCard({
           ₹ {currentPrice}
         </p>
 
-        {/* Countdown (from old UI ) */}
-        <p className="text-sm mb-3">
-          ⏳ {useCountdown(endTime)}
-        </p>
+        {/* Countdown with Proper Icon */}
+        <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+          <Clock className="w-4 h-4 text-orange-500" />
+          <span>{useCountdown(endTime)}</span>
+        </div>
 
         {/* View Button */}
-        <div className="w-full bg-blue-600 text-white py-2 rounded-lg text-center hover:bg-blue-700">
+        <div className="mt-auto w-full bg-blue-600 text-white py-2.5 rounded-lg text-center hover:bg-blue-700 transition-colors font-medium">
           View Auction
         </div>
 
-        {/* ACTIONS (ONLY FOR OWNER) */}
+        {/* Owner Actions */}
         {showActions && (
           <div
             className="flex gap-2 mt-3"
-            onClick={(e) => e.preventDefault()} // prevent parent link navigation
+            onClick={(e) => e.preventDefault()}
           >
             <Link
               to={`/edit-auction/${id}`}
-              className="flex-1 text-center bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600"
+              className="flex-1 text-center bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600 transition-colors"
             >
               Edit
             </Link>
 
             <button
               onClick={handleDelete}
-              className="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700"
+              className="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700 transition-colors"
             >
               Delete
             </button>
           </div>
         )}
-
       </div>
     </Link>
   );
