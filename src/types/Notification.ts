@@ -1,17 +1,13 @@
 export interface Notification {
   id: number;
-  userId: number;
   title?: string;
   message: string;
-  type: "BID" | "AUCTION_END" | "AUCTION_WON" | "SYSTEM" | "WATCHLIST";
+  type: 'BID_PLACED' | 'OUTBID' | 'AUCTION_WON' | 'AUCTION_ENDED' | 'SYSTEM';
   isRead: boolean;
+  link?: string;
   createdAt: string;
-  link?: string; // e.g. "/auctions/123"
-  metadata?: any; // extra data like auctionId, bidAmount etc.
 }
 
-export interface NotificationsResponse {
-  notifications: Notification[];
+export interface UnreadCountResponse {
   unreadCount: number;
-  total: number;
 }
