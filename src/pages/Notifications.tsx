@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useNotifications } from "../hooks/useNotifications";
 import { Link } from "react-router-dom";
-import { formatDistanceToNow } from "date-fns";
 
 export default function Notifications() {
   const { notifications, loading, markAsRead, markAllAsRead } = useNotifications();
@@ -41,13 +40,19 @@ export default function Notifications() {
               className={`bg-white p-5 rounded-xl shadow-sm border-l-4 hover:shadow-md transition-all cursor-pointer
                 ${!notif.isRead ? "border-blue-500 bg-blue-50" : "border-gray-200"}`}
             >
-              <div className="flex justify-between">
-                <div>
-                  {notif.title && <h3 className="font-semibold">{notif.title}</h3>}
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  {notif.title && <h3 className="font-semibold text-lg">{notif.title}</h3>}
                   <p className="mt-1 text-gray-700">{notif.message}</p>
                 </div>
-                <span className="text-xs text-gray-500 whitespace-nowrap">
-                  {formatDistanceToNow(new Date(notif.createdAt), { addSuffix: true })}
+                <span className="text-xs text-gray-500 whitespace-nowrap ml-4">
+                  {new Date(notif.createdAt).toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
                 </span>
               </div>
 
@@ -55,6 +60,7 @@ export default function Notifications() {
                 <Link
                   to={notif.link}
                   className="text-blue-600 text-sm mt-3 inline-block hover:underline"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   View Details →
                 </Link>
