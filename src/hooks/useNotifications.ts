@@ -7,17 +7,19 @@ export const useNotifications = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const fetchNotifications = useCallback(async () => {
-    try {
-      setLoading(true);
-      const res = await notificationApi.getNotifications();
-      setNotifications(res.data);
-    } catch (err) {
-      console.error("Failed to fetch notifications", err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+const fetchNotifications = useCallback(async () => {
+  try {
+    setLoading(true);
+    console.log("Fetching notifications with token:", localStorage.getItem("token") ? "Present" : "Missing");
+    const res = await notificationApi.getNotifications();
+    console.log("✅ Notifications received:", res.data);
+    setNotifications(res.data);
+  } catch (err: any) {
+    console.error("❌ Failed to fetch notifications", err.response?.data || err.message);
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
   const fetchUnreadCount = useCallback(async () => {
     try {
