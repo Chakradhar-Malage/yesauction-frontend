@@ -5,10 +5,13 @@ import SockJS from "sockjs-client";
 import { AuctionUpdateDto, BidUpdate } from "../dto/AuctionUpdateDto";
 import { WS_BASE_URL, WS_TOPICS } from "../api/apiConfig";
 
+// NOTE: Personal /user/queue/notifications handling has moved to
+// useNotificationSocket.ts (used inside useNotifications). Keeping it here
+// too would open a second authenticated socket and cause every outbid
+// notification to be handled/alerted twice while viewing an auction page.
 export const useAuctionWebSocket = (auctionId: number | null) => {
   const clientRef = useRef<Client | null>(null);
   const auctionSubscriptionRef = useRef<StompSubscription | null>(null);
-  const notificationSubscriptionRef = useRef<StompSubscription | null>(null);
 
   const [updates, setUpdates] = useState<BidUpdate[]>([]);
   const [connected, setConnected] = useState(false);
@@ -36,25 +39,10 @@ export const useAuctionWebSocket = (auctionId: number | null) => {
         (message: IMessage) => {
           try {
             const update: BidUpdate = JSON.parse(message.body);
-            console.log("WS UPDATE RECEIVED:", update); 
             setUpdates((prev) => [...prev, update]);
           } catch (err) {
             console.error("WebSocket parse error:", err);
           }
-        }
-      );
-
-      // Personal notifications
-      notificationSubscriptionRef.current = client.subscribe(
-        WS_TOPICS.USER_NOTIFICATIONS,
-        (message: IMessage) => {
-          const notification = JSON.parse(message.body);
-
-          console.log("Notification:", notification);
-
-          alert(
-            `Outbid alert: ${notification.newBidderUsername} bid $${notification.newAmount}`
-          );
         }
       );
     };
@@ -72,7 +60,6 @@ export const useAuctionWebSocket = (auctionId: number | null) => {
 
     return () => {
       auctionSubscriptionRef.current?.unsubscribe();
-      notificationSubscriptionRef.current?.unsubscribe();
       client.deactivate();
     };
   }, [auctionId]);
