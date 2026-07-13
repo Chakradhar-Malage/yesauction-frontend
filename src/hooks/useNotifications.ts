@@ -1,25 +1,24 @@
 import { useState, useEffect, useCallback } from "react";
 import { notificationApi } from "../api/notificationApis";
 import { Notification } from "../types/Notification";
+import { useNotificationSocket } from "./useNotificationSocket";
 
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
-const fetchNotifications = useCallback(async () => {
-  try {
-    setLoading(true);
-    console.log("Fetching notifications with token:", localStorage.getItem("token") ? "Present" : "Missing");
-    const res = await notificationApi.getNotifications();
-    console.log("✅ Notifications received:", res.data);
-    setNotifications(res.data);
-  } catch (err: any) {
-    console.error("❌ Failed to fetch notifications", err.response?.data || err.message);
-  } finally {
-    setLoading(false);
-  }
-}, []);
+  const fetchNotifications = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await notificationApi.getNotifications();
+      setNotifications(res.data);
+    } catch (err: any) {
+      console.error("Failed to fetch notifications", err.response?.data || err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const fetchUnreadCount = useCallback(async () => {
     try {
@@ -51,6 +50,21 @@ const fetchNotifications = useCallback(async () => {
       console.error(err);
     }
   };
+
+  // Live push: a new notification arrived over the WebSocket. Prepend it and
+  // bump the unread count, guarding against duplicates (e.g. if a manual
+  // fetchNotifications() lands around the same time as the socket push).
+  const handleIncoming = useCallback((notification: Notification) => {
+    setNotifications((prev) => {
+      if (prev.some((n) => n.id === notification.id)) return prev;
+      return [notification, ...prev];
+    });
+    if (!notification.isRead) {
+      setUnreadCount((prev) => prev + 1);
+    }
+  }, []);
+
+  useNotificationSocket(handleIncoming);
 
   // Initial load
   useEffect(() => {
