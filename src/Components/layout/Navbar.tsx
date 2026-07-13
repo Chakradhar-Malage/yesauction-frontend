@@ -113,7 +113,7 @@ export default function Navbar() {
                             <div
                               key={notif.id}
                               onClick={() => handleNotificationClick(notif)}
-                              className={`p-4 border-b hover:bg-gray-50 cursor-pointer ${!notif.isRead ? "bg-blue-50" : ""}`}
+                              className={`p-4 border-b hover:bg-gray-50 cursor-pointer ${!notif.read ? "bg-blue-50" : ""}`}
                             >
                               <p className="text-sm">{notif.message}</p>
                               <p className="text-xs text-gray-500 mt-1">

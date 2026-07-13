@@ -3,7 +3,7 @@ export interface Notification {
   title?: string;
   message: string;
   type: 'BID_PLACED' | 'OUTBID' | 'AUCTION_WON' | 'AUCTION_ENDED' | 'SYSTEM';
-  isRead: boolean;
+  read: boolean;
   link?: string;
   createdAt: string;
 }

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { notificationApi } from "../api/notificationApis";
 import { Notification } from "../types/Notification";
 import { useNotificationSocket } from "./useNotificationSocket";
-
+  
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -59,7 +59,7 @@ export const useNotifications = () => {
       if (prev.some((n) => n.id === notification.id)) return prev;
       return [notification, ...prev];
     });
-    if (!notification.isRead) {
+    if (!notification.read) {
       setUnreadCount((prev) => prev + 1);
     }
   }, []);
