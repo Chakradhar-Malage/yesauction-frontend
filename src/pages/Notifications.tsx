@@ -104,7 +104,7 @@ export default function Notifications() {
 
   const filtered = useMemo(() => {
     return activeTab === "unread"
-      ? notifications.filter((n) => !n.isRead)
+      ? notifications.filter((n) => !n.read)
       : notifications;
   }, [notifications, activeTab]);
 
@@ -122,7 +122,7 @@ export default function Notifications() {
   }, [filtered]);
 
   const handleClick = async (notif: Notification) => {
-    if (!notif.isRead) {
+    if (!notif.read) {
       await markAsRead(notif.id);
     }
     if (notif.link) {
@@ -144,7 +144,7 @@ export default function Notifications() {
             </p>
           )}
         </div>
-        {notifications.some((n) => !n.isRead) && (
+        {notifications.some((n) => !n.read) && (
           <button
             onClick={markAllAsRead}
             className="text-blue-600 hover:underline text-sm font-medium"
@@ -233,7 +233,7 @@ export default function Notifications() {
                       onClick={() => handleClick(notif)}
                       className={`bg-white p-5 rounded-xl shadow-sm border-l-4 hover:shadow-md transition-all cursor-pointer
                         ${
-                          !notif.isRead
+                          !notif.read
                             ? "border-blue-500 bg-blue-50/60"
                             : "border-gray-200"
                         }`}
@@ -251,7 +251,7 @@ export default function Notifications() {
                           <div className="flex justify-between items-start gap-3">
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
-                                {!notif.isRead && (
+                                {!notif.read && (
                                   <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />
                                 )}
                                 <h3 className="font-semibold text-gray-900 truncate">
@@ -273,7 +273,7 @@ export default function Notifications() {
                                 View Details →
                               </span>
                             )}
-                            {!notif.isRead && (
+                            {!notif.read && (
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
