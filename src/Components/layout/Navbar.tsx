@@ -88,7 +88,7 @@ export default function Navbar() {
                       setNotificationsOpen(!notificationsOpen);
                       setProfileOpen(false);
                     }}
-                    className="text-2xl hover:text-blue-600 relative"
+                    className="absolute-right text-2xl hover:text-blue-600 relative"
                   >
                     🔔
                     {unreadCount > 0 && (
@@ -157,7 +157,7 @@ export default function Navbar() {
                 </button>
 
                 {profileOpen && (
-                  <div className="absolute right-0 mt-3 w-48 bg-white border rounded-lg shadow-lg z-50">
+                  <div className="absolute right-[-20] mt-3 w-48 bg-white border rounded-lg shadow-lg z-50">
                     <Link to={`/users/${user.username}`} className="block px-4 py-2 hover:bg-gray-100" onClick={() => setProfileOpen(false)}>
                       Profile
                     </Link>
