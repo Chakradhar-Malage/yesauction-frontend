@@ -10,9 +10,12 @@ export const fetchAuctionById = async (id: number) => {
   return response.data;
 };
 
-export const fetchAuctionsByCategory = async (category: string) => {
+export const fetchAuctionsByCategory = async (category: string[]) => {
   const response = await axiosClient.get("/auctions", {
     params: { category },
+    paramsSerializer: {
+      indexes: null,
+    },
   });
   return response.data.content;
 };
