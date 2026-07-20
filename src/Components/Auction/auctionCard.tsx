@@ -4,6 +4,8 @@ import { Clock } from "lucide-react";
 import useCountdown from "../../hooks/useCountdown";
 import { watchlistApi } from "../../api/watchlistApis";
 
+import { Heart } from "lucide-react";
+
 interface Props {
   id: number;
   title: string;
@@ -53,11 +55,13 @@ export default function AuctionCard({
       <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 h-full flex flex-col relative">
 
         {/* Watchlist Heart */}
-        <button
+       <button
           onClick={toggleWatch}
-          className="absolute top-4 right-4 z-10 text-2xl hover:scale-110 transition-transform"
+          className="absolute top-4 right-4 z-10 p-2 rounded-full hover:bg-gray-100 transition-colors"
         >
-          {isWatched ? "❤️" : "♡"}
+          <Heart 
+            className={`w-6 h-6 transition-colors ${isWatched ? "fill-red-500 text-red-500" : "text-gray-400"}`} 
+          />
         </button>
 
         {/* Image */}
