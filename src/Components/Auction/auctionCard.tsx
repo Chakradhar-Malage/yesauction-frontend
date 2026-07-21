@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Clock } from "lucide-react";
 import useCountdown from "../../hooks/useCountdown";
@@ -14,6 +14,8 @@ interface Props {
   endTime: string;
   imageUrl?: string | null;
   showActions?: boolean;
+  isWatched?: boolean;       
+  onWatchToggle?: () => void; // Optional callback
 }
 
 export default function AuctionCard({
@@ -24,9 +26,23 @@ export default function AuctionCard({
   endTime,
   imageUrl,
   showActions = false,
+  // isWatched = false,           
+  onWatchToggle,
 }: Props) {
 
-  const [isWatched, setIsWatched] = useState(false); // Will be controlled from parent if needed
+  const [isWatched, setIsWatched] = useState(false);
+
+useEffect(() => {
+  const checkStatus = async () => {
+    try {
+      const res = await watchlistApi.checkWatchlistStatus(id);
+      setIsWatched(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  checkStatus();
+}, [id]);
 
   const toggleWatch = async (e: React.MouseEvent) => {
     e.preventDefault();
