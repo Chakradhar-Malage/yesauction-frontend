@@ -37,10 +37,11 @@ export default function Watchlist() {
               key={item.watchlistId}
               id={item.auctionId}
               title={item.title}
-              description="" // Add if you have description in DTO
+              description="" 
               currentPrice={item.currentPrice}
               endTime={item.endTime}
               imageUrl={item.imageUrl}
+              isWatched={true} // Since it's in the watchlist
             />
           ))}
         </div>
