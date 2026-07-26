@@ -173,6 +173,26 @@ export default function EditProfile() {
           </button>
         </div>
       </form>
+      {/* Security */}
+      <div className="bg-white shadow-md rounded-xl p-6" style={{ marginTop: "2rem" }}>
+        <h2 className="text-xl font-semibold border-b pb-3 mb-4">Security</h2>
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-medium">Password</p>
+            <p className="text-sm text-gray-500">
+              Change your account password.
+            </p>
+          </div>
+
+          <button
+            onClick={() => navigate("/change-password")}
+            className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800"
+          >
+            Change Password
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
