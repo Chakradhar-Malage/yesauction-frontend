@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import axiosClient from "../api/axiosClient";
-import { updateProfile } from "../api/profileApis";
+import { updateProfile, deleteProfile } from "../api/profileApis";
 
 export default function EditProfile() {
   const { user } = useCurrentUser();
@@ -104,6 +104,30 @@ export default function EditProfile() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to permanently delete your account? This action cannot be undone.",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setLoading(true);
+
+      await deleteProfile();
+
+      localStorage.removeItem("token");
+
+      alert("Your account has been deleted.");
+
+      navigate("/login");
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Failed to delete account.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!user) {
     return <div className="text-center py-20">Loading...</div>;
   }
@@ -174,7 +198,10 @@ export default function EditProfile() {
         </div>
       </form>
       {/* Security */}
-      <div className="bg-white shadow-md rounded-xl p-6" style={{ marginTop: "2rem" }}>
+      <div
+        className="bg-white shadow-md rounded-xl p-6"
+        style={{ marginTop: "2rem" }}
+      >
         <h2 className="text-xl font-semibold border-b pb-3 mb-4">Security</h2>
 
         <div className="flex items-center justify-between">
@@ -190,6 +217,35 @@ export default function EditProfile() {
             className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800"
           >
             Change Password
+          </button>
+        </div>
+      </div>
+
+      {/* Danger Zone */}
+      <div className="bg-white shadow-md rounded-xl p-6 border border-red-200"
+        style={{ marginTop: "2rem" }}
+      >
+        <h2 className="text-xl font-semibold text-red-600 border-b border-red-200 pb-3 mb-4">
+          Danger Zone
+        </h2>
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-medium text-red-700">Delete Account</p>
+            <p className="text-sm text-gray-500" 
+              style={{ maxWidth: "500px", paddingRight: "1rem" }}
+
+            >
+              Permanently delete your account and all associated data. This
+              action cannot be undone.
+            </p>
+          </div>
+
+          <button
+            onClick={handleDeleteAccount}
+            className="bg-red-600 text-white px-10 py-2 rounded-lg hover:bg-red-700"
+          >
+            Delete 
           </button>
         </div>
       </div>
