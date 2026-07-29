@@ -27,5 +27,6 @@ export const updateProfile = async (formData: { username: string; email: string 
 
 //delete profile
 export const deleteProfile = async () => {
-  
+  const response = await axiosClient.delete("/users/account");
+  return response.data;
 }
