@@ -3,7 +3,8 @@ import AuctionCard from "../Components/Auction/auctionCard";
 import Navbar from "../Components/layout/Navbar";
 
 const MyAuctions = () => {
-  const { auctions, page, setPage, totalPages, loading } = useMyAuctions();
+  const { auctions, page, setPage, totalPages, loading, removeAuction } =
+    useMyAuctions();
 
   if (loading) {
     return (
@@ -89,6 +90,7 @@ const MyAuctions = () => {
                     endTime={auction.endTime}
                     imageUrl={auction.imageUrl}
                     showActions={true} // show edit/delete buttons
+                    onDeleted={removeAuction}
                   />
                 </div>
               );

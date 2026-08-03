@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Clock } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Clock, Pencil, Trash2 } from "lucide-react";
 import useCountdown from "../../hooks/useCountdown";
 import { watchlistApi } from "../../api/watchlistApis";
+import axiosClient from "../../api/axiosClient";
 
 import { Heart } from "lucide-react";
 
@@ -14,8 +15,9 @@ interface Props {
   endTime: string;
   imageUrl?: string | null;
   showActions?: boolean;
-  isWatched?: boolean;       
+  isWatched?: boolean;
   onWatchToggle?: () => void; // Optional callback
+  onDeleted?: (id: number) => void; // Optional callback, fired after a successful delete
 }
 
 export default function AuctionCard({
@@ -26,28 +28,30 @@ export default function AuctionCard({
   endTime,
   imageUrl,
   showActions = false,
-  // isWatched = false,           
+  // isWatched = false,
   onWatchToggle,
+  onDeleted,
 }: Props) {
-
+  const navigate = useNavigate();
   const [isWatched, setIsWatched] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
-useEffect(() => {
-  const checkStatus = async () => {
-    try {
-      const res = await watchlistApi.checkWatchlistStatus(id);
-      setIsWatched(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  checkStatus();
-}, [id]);
+  useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        const res = await watchlistApi.checkWatchlistStatus(id);
+        setIsWatched(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    checkStatus();
+  }, [id]);
 
   const toggleWatch = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     try {
       if (isWatched) {
         await watchlistApi.removeFromWatchlist(id);
@@ -57,6 +61,36 @@ useEffect(() => {
       setIsWatched(!isWatched);
     } catch (err) {
       console.error("Failed to toggle watchlist", err);
+    }
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/edit-auction/${id}`);
+  };
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const confirmed = window.confirm(
+      `Delete "${title}"? This can't be undone.`
+    );
+    if (!confirmed) return;
+
+    try {
+      setDeleting(true);
+      await axiosClient.delete(`/auctions/${id}`);
+      onDeleted?.(id);
+    } catch (err: any) {
+      console.error("Failed to delete auction", err);
+      alert(
+        err.response?.data ||
+          "Couldn't delete this auction. It may already have bids."
+      );
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -117,7 +151,21 @@ useEffect(() => {
         {/* Owner Actions */}
         {showActions && (
           <div className="flex gap-2 mt-3">
-            {/* Add your edit/delete buttons here */}
+            <button
+              onClick={handleEdit}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium"
+            >
+              <Pencil className="w-4 h-4" />
+              Edit
+            </button>
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition-colors text-sm font-medium disabled:opacity-50"
+            >
+              <Trash2 className="w-4 h-4" />
+              {deleting ? "Deleting..." : "Delete"}
+            </button>
           </div>
         )}
       </div>

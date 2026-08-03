@@ -8,19 +8,23 @@ export const useMyAuctions = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-  setLoading(true);
+    setLoading(true);
 
-  getMyAuctions(page)
-    .then((res) => {
-      setAuctions(res.content || []);
-      setTotalPages(res.totalPages || 0);
-    })
-    .catch((err) => {
-      console.error("Failed to fetch my auctions:", err); 
-      setAuctions([]);
-    })
-    .finally(() => setLoading(false));
-}, [page]);
+    getMyAuctions(page)
+      .then((res) => {
+        setAuctions(res.content || []);
+        setTotalPages(res.totalPages || 0);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch my auctions:", err);
+        setAuctions([]);
+      })
+      .finally(() => setLoading(false));
+  }, [page]);
 
-  return { auctions, page, setPage, totalPages, loading };
+  const removeAuction = (id: number) => {
+    setAuctions((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  return { auctions, page, setPage, totalPages, loading, removeAuction };
 };
