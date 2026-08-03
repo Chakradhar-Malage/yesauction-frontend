@@ -5,7 +5,7 @@ import AuctionCard from "../Components/Auction/auctionCard";
 import DashboardAuctionCard from "../Components/Dashboard/DashboardAuctionCard";
 
 const SellerDashboard = () => {
-  const { auctions, loading } = useMyAuctions();
+  const { auctions, loading, removeAuction } = useMyAuctions();
 
   return (
     <div className="flex">
@@ -34,6 +34,7 @@ const SellerDashboard = () => {
                 id={auction.id}
                 title={auction.title}
                 currentPrice={auction.currentPrice}
+                onDeleted={removeAuction}
               />
             ))}
           </div>

@@ -1,4 +1,3 @@
-import exp from "constants";
 import axiosClient from "./axiosClient";
 
 export const getCurrentUser = async () => {
@@ -15,6 +14,12 @@ export const getMyBidHistory = async () => {
 //my all auctions
 export const getMyAuctions = async (page: number) => {
   const response = await axiosClient.get(`/users/me/auctions?page=${page}&size=7`);
+  return response.data;
+};
+
+//seller dashboard stats (total auctions, active bids, total earnings)
+export const getSellerStats = async () => {
+  const response = await axiosClient.get("/users/me/stats");
   return response.data;
 };
 
