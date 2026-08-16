@@ -17,7 +17,7 @@ const CreateAuction = () => {
 
   // TEXT INPUT HANDLER
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setForm({
       ...form,
@@ -38,6 +38,11 @@ const CreateAuction = () => {
   //SUBMIT
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!form.image) {
+      alert("Please upload an image for your auction.");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("title", form.title);
@@ -139,6 +144,7 @@ const CreateAuction = () => {
               onChange={handleFileChange}
               className="hidden"
               id="fileUpload"
+              // required
             />
 
             <label
