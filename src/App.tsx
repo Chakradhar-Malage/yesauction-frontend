@@ -15,6 +15,7 @@ import SellerDashboard from "./pages/SellerDashboard";
 import EditProfile from "./pages/EditProfile";
 import Notifications from "./pages/Notifications";
 import Watchlist from "./pages/Watchlist";
+import ContactUs from "./pages/ContactUs";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/notifications" element={<Notifications/>}/>
           <Route path="/watchlist" element={<Watchlist />} />
+          <Route path="/contact-us" element={<ContactUs />} />
         </Route>
 
         {/* No layout */}
