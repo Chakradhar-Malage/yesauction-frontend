@@ -3,16 +3,46 @@ import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useMyAuctions } from "../hooks/useMyAuctions";
 import { useMyBids } from "../hooks/useMyBids";
 
-function StatCard({ label, value }: { label: string; value: number | undefined }) {
-  return (
-    <div className="bg-white shadow-sm border rounded-xl p-5 text-center">
+function StatCard({
+  label,
+  value,
+  onClick,
+}: {
+  label: string;
+  value: number | undefined;
+  onClick?: () => void;
+}) {
+  const content = (
+    <>
       <p className="text-sm text-gray-500">{label}</p>
       <h2 className="text-2xl font-semibold mt-1">
         {value ?? "—"}
       </h2>
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className="bg-white shadow-sm border rounded-xl p-5 text-center
+                   transition cursor-pointer
+                   hover:shadow-md hover:border-blue-300 hover:bg-blue-50
+                   focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <div className="bg-white shadow-sm border rounded-xl p-5 text-center">
+      {content}
     </div>
   );
 }
+
 
 function Avatar({ username }: { username: string | undefined }) {
   const initial = username?.charAt(0)?.toUpperCase() || "?";
@@ -88,8 +118,8 @@ export default function Profile() {
 
       {/* STATS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard label="My Auctions" value={myAuctionsCount} />
-        <StatCard label="My Bids" value={myBidsCount} />
+        <StatCard label="My Auctions" value={myAuctionsCount} onClick={() => navigate("/my-auctions")} />
+        <StatCard label="My Bids" value={myBidsCount} onClick={() => navigate("/my-bids")} />
         <StatCard label="Active Auctions" value={myAuctionsCount} />
       </div>
 
