@@ -20,10 +20,16 @@ export default function Navbar() {
   // Close dropdowns on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(e.target as Node)
+      ) {
         setProfileOpen(false);
       }
-      if (notificationsRef.current && !notificationsRef.current.contains(e.target as Node)) {
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(e.target as Node)
+      ) {
         setNotificationsOpen(false);
       }
     }
@@ -68,18 +74,25 @@ export default function Navbar() {
               onChange={(e) => setQuery(e.target.value)}
               className="w-full border rounded-l-lg px-4 py-2 focus:outline-none"
             />
-            <button type="submit" className="bg-blue-600 text-white px-4 rounded-r-lg hover:bg-blue-700">
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-4 rounded-r-lg hover:bg-blue-700"
+            >
               Search
             </button>
           </form>
 
           {/* Desktop Right Menu */}
           <div className="hidden md:flex items-center gap-6">
-            <Link to="/auctions" className="hover:text-blue-600">Auctions</Link>
+            <Link to="/auctions" className="hover:text-blue-600">
+              Auctions
+            </Link>
 
             {user && (
               <>
-                <Link to="/watchlist" className="hover:text-blue-600">Watchlist</Link>
+                <Link to="/watchlist" className="hover:text-blue-600">
+                  Watchlist
+                </Link>
 
                 {/* Notifications Dropdown */}
                 <div className="relative" ref={notificationsRef}>
@@ -102,7 +115,11 @@ export default function Navbar() {
                     <div className="absolute right-0 mt-3 w-80 bg-white border rounded-xl shadow-xl z-50 max-h-[420px] overflow-hidden flex flex-col">
                       <div className="p-4 border-b bg-gray-50 flex justify-between items-center">
                         <h3 className="font-semibold">Notifications</h3>
-                        <Link to="/notifications" onClick={() => setNotificationsOpen(false)} className="text-blue-600 text-sm hover:underline">
+                        <Link
+                          to="/notifications"
+                          onClick={() => setNotificationsOpen(false)}
+                          className="text-blue-600 text-sm hover:underline"
+                        >
                           View All
                         </Link>
                       </div>
@@ -122,7 +139,9 @@ export default function Navbar() {
                             </div>
                           ))
                         ) : (
-                          <div className="p-8 text-center text-gray-500">No new notifications</div>
+                          <div className="p-8 text-center text-gray-500">
+                            No new notifications
+                          </div>
                         )}
                       </div>
                     </div>
@@ -133,8 +152,13 @@ export default function Navbar() {
 
             {!user && (
               <>
-                <Link to="/login" className="hover:text-blue-600">Login</Link>
-                <Link to="/register" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                <Link to="/login" className="hover:text-blue-600">
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                >
                   Register
                 </Link>
               </>
@@ -155,15 +179,33 @@ export default function Navbar() {
                   </div>
                   <span>{user.username}</span>
                 </button>
-
                 {profileOpen && (
                   <div className="absolute right-[-20] mt-3 w-48 bg-white border rounded-lg shadow-lg z-50">
-                    <Link to={`/users/${user.username}`} className="block px-4 py-2 hover:bg-gray-100" onClick={() => setProfileOpen(false)}>
+                    <Link
+                      to={`/users/${user.username}`}
+                      className="block px-4 py-2 hover:bg-gray-100"
+                      onClick={() => setProfileOpen(false)}
+                    >
                       Profile
                     </Link>
-                    <Link to="/dashboard" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setProfileOpen(false)}>
+                    <Link
+                      to="/dashboard"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                      onClick={() => setProfileOpen(false)}
+                    >
                       Dashboard
                     </Link>
+                    
+                    {(user.roles?.includes("ROLE_ADMIN") ||
+                      user.roles?.includes("ADMIN")) && (
+                      <Link
+                        to="/admin"
+                        className="block px-4 py-2 hover:bg-gray-100 rounded-lg text-blue-600 font-medium"
+                        onClick={() => setProfileOpen(false)}
+                      >
+                        Admin Panel
+                      </Link>
+                    )}
                     <button
                       onClick={() => {
                         localStorage.removeItem("token");
@@ -180,7 +222,10 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button className="md:hidden text-2xl" onClick={() => setMenuOpen(!menuOpen)}>
+          <button
+            className="md:hidden text-2xl"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
             ☰
           </button>
         </div>
