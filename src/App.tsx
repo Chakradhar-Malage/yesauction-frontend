@@ -17,6 +17,9 @@ import Notifications from "./pages/Notifications";
 import Watchlist from "./pages/Watchlist";
 import ContactUs from "./pages/ContactUs";
 import AdminContactMessages from "./pages/AdminContactMessages";
+import AdminLayout from "./Components/Admin/AdminLayout";
+import AdminDashboard from "./pages/AdminDashboard";
+
 
 function App() {
   return (
@@ -38,7 +41,15 @@ function App() {
           <Route path="/notifications" element={<Notifications/>}/>
           <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/contact-us" element={<ContactUs />} />
-          <Route path="/admin/contact-messages" element={<AdminContactMessages />} />
+
+          {/* Admin routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="/admin/contact-messages" element={<AdminContactMessages />} />
+            {/* Future pages */}
+            {/* <Route path="users" element={<AdminUsers />} /> */}
+            {/* <Route path="auctions" element={<AdminAuctions />} /> */}
+          </Route>
         </Route>
 
         {/* No layout */}

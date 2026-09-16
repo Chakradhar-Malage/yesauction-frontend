@@ -251,7 +251,7 @@ export default function Profile() {
                 className="rounded-full bg-gray-100 px-3 py-1
                            text-xs font-medium text-gray-700"
               >
-                {user.role}
+                {user.roles}
               </span>
             </div>
 
@@ -385,7 +385,7 @@ export default function Profile() {
 
           <VerificationRow
             label="Mobile Number"
-            verified={user.mobileNumberVerified}
+            verified={user.mobileNumberVerified ?? false}
             description={
               user.mobileNumberVerified
                 ? "Your mobile number is verified."
@@ -526,7 +526,7 @@ export default function Profile() {
           <div>
             <p className="text-gray-500">Role</p>
             <p className="mt-1 font-medium text-gray-900">
-              {user.role}
+              {user.roles}
             </p>
           </div>
 
