@@ -1,24 +1,38 @@
+import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
-import { useEffect } from "react";
+import axiosClient from "../../api/axiosClient";
 
 export default function AdminLayout() {
   const { user } = useCurrentUser();
   const location = useLocation();
   const navigate = useNavigate();
+  const [unreadCount, setUnreadCount] = useState(0);
 
-  // Protect admin routes
   useEffect(() => {
     if (user && !user.roles?.includes("ROLE_ADMIN")) {
       navigate("/");
     }
   }, [user, navigate]);
 
+  useEffect(() => {
+    const fetchUnread = async () => {
+      try {
+        const res = await axiosClient.get("/admin/contact-messages/unread-count");
+        setUnreadCount(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchUnread();
+  }, [location.pathname]);
+
   const menuItems = [
     { name: "Dashboard", path: "/admin" },
-    { name: "Contact Messages", path: "/admin/contact-messages" },
+    { name: "Contact Messages", path: "/admin/contact-messages", badge: unreadCount },
     { name: "Users", path: "/admin/users" },
     { name: "Auctions", path: "/admin/auctions" },
+    { name: "Badges", path: "/admin/badges" },
   ];
 
   return (
@@ -37,13 +51,19 @@ export default function AdminLayout() {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`block px-4 py-2.5 rounded-lg transition-colors ${
+                className={`flex items-center justify-between px-4 py-2.5 rounded-lg transition-colors ${
                   isActive
                     ? "bg-blue-600 text-white"
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                {item.name}
+                <span>{item.name}</span>
+                {(item.badge ?? 0) > 0 && (
+  <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+    {item.badge}
+  </span>
+)}
+
               </Link>
             );
           })}
@@ -59,7 +79,6 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 overflow-auto">
         <div className="p-8">
           <Outlet />
