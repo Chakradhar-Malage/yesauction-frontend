@@ -20,6 +20,7 @@ import AdminContactMessages from "./pages/AdminContactMessages";
 import AdminLayout from "./Components/Admin/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProtectedRoute from "./Components/Admin/AdminProtectedRoute";
+import AdminUsers from "./pages/AdminUsers";
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
           {/* Admin routes */}
             <Route path="/admin" element={<AdminProtectedRoute> <AdminLayout /></AdminProtectedRoute>}>
             <Route index element={<AdminDashboard />} />
+            <Route path="users" element={<AdminUsers />} />
             <Route path="/admin/contact-messages" element={<AdminContactMessages />} />
             {/* Future pages */}
             {/* <Route path="users" element={<AdminUsers />} /> */}
