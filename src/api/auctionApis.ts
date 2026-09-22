@@ -1,9 +1,16 @@
+import { Axis3D } from "lucide-react";
 import axiosClient from "./axiosClient";
 
 export const fetchAuctions = async () => {
   const response = await axiosClient.get("/auctions");
   return response.data;
 };
+
+//fetch all auctions for admin irrespective of there status
+export const fetchAllAuctions = async() => {
+  const response = await axiosClient.get("/auctions/all");
+  return response.data;
+}
 
 export const fetchAuctionById = async (id: number) => {
   const response = await axiosClient.get(`/auctions/${id}`);
@@ -35,6 +42,11 @@ export const deleteAuction = async (id: number) => {
   return response.data;
 };
 
+export const endAuction = async (id: number) => {
+  const response = await axiosClient.post(`/auctions/${id}/end`);
+  return response.data;
+};
+
 export const updateAuction = async (id: number, data: any) => {
   const response = await axiosClient.put(`/auctions/${id}`, data);
   return response.data;
@@ -45,9 +57,9 @@ export const updateAuctionImage = async (id: number, file: File) => {
   formData.append("image", file);
 
   // Add this temporarily
-  console.log("FormData entries:");
+  // console.log("FormData entries:");
   for (const [key, value] of Array.from(formData.entries())) {
-    console.log(key, value);
+    // console.log(key, value);
   }
 
   const response = await axiosClient.post(`/auctions/${id}/image`, formData);

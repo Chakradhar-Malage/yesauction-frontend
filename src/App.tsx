@@ -21,6 +21,7 @@ import AdminLayout from "./Components/Admin/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProtectedRoute from "./Components/Admin/AdminProtectedRoute";
 import AdminUsers from "./pages/AdminUsers";
+import AdminAuctions from "./pages/AdminAuctions";
 
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
             <Route path="/admin" element={<AdminProtectedRoute> <AdminLayout /></AdminProtectedRoute>}>
             <Route index element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsers />} />
+            <Route path="auctions" element={<AdminAuctions />} />
             <Route path="/admin/contact-messages" element={<AdminContactMessages />} />
             {/* Future pages */}
             {/* <Route path="users" element={<AdminUsers />} /> */}
