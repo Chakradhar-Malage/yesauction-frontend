@@ -22,6 +22,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminProtectedRoute from "./Components/Admin/AdminProtectedRoute";
 import AdminUsers from "./pages/AdminUsers";
 import AdminAuctions from "./pages/AdminAuctions";
+import Help from "./pages/Help";
 
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
           <Route path="/notifications" element={<Notifications/>}/>
           <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/help" element={<Help />} />
 
           {/* Admin routes */}
             <Route path="/admin" element={<AdminProtectedRoute> <AdminLayout /></AdminProtectedRoute>}>
