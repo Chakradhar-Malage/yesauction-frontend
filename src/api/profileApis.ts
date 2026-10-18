@@ -35,3 +35,13 @@ export const deleteProfile = async () => {
   const response = await axiosClient.delete("/users/account");
   return response.data;
 }
+
+export const fetchWonAuctions = async () => {
+  const response = await axiosClient.get("/users/me/won-auctions");
+  return response.data;
+};
+
+export const fetchWonAuctionsCount = async () => {
+  const response = await axiosClient.get("/users/me/won-count");
+  return response.data;
+};
