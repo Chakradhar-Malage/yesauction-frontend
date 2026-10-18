@@ -23,6 +23,7 @@ import AdminProtectedRoute from "./Components/Admin/AdminProtectedRoute";
 import AdminUsers from "./pages/AdminUsers";
 import AdminAuctions from "./pages/AdminAuctions";
 import Help from "./pages/Help";
+import WonAuctions from "./pages/WonAuctions";
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
           <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/won-auctions" element={<WonAuctions />} />
 
           {/* Admin routes */}
             <Route path="/admin" element={<AdminProtectedRoute> <AdminLayout /></AdminProtectedRoute>}>
