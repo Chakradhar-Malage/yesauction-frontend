@@ -5,6 +5,7 @@ export interface SellerStats {
   totalAuctions: number;
   activeBids: number;
   totalEarnings: number;
+  soldCount?: number; // backend must return this
 }
 
 export const useSellerStats = () => {
