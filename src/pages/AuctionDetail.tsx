@@ -58,7 +58,7 @@ export default function AuctionDetailPage() {
     const latest = updates[updates.length - 1];
 
     setAuction((prev) =>
-      prev ? { ...prev, currentPrice: Number(latest.amount) } : prev
+      prev ? { ...prev, currentPrice: Number(latest.amount) } : prev,
     );
 
     setBidHistory((prev) => [
@@ -90,10 +90,17 @@ export default function AuctionDetailPage() {
     }
   };
 
-  if (loading) return <div className="text-center py-20 text-xl">Loading auction...</div>;
-  if (!auction) return <div className="text-center py-20 text-xl">Auction not found</div>;
+  if (loading)
+    return <div className="text-center py-20 text-xl">Loading auction...</div>;
+  if (!auction)
+    return <div className="text-center py-20 text-xl">Auction not found</div>;
 
-  const highestBid = bidHistory[bidHistory.length - 1];
+  const highestBid = bidHistory.reduce<Bid | null>((highest, bid) => {
+    if (!highest || Number(bid.amount) > Number(highest.amount)) {
+      return bid;
+    }
+    return highest;
+  }, null);
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
@@ -116,8 +123,12 @@ export default function AuctionDetailPage() {
         {/* Right: Details */}
         <div className="space-y-8">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-3">{auction.title}</h1>
-            <p className="text-gray-600 leading-relaxed">{auction.description}</p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-3">
+              {auction.title}
+            </h1>
+            <p className="text-gray-600 leading-relaxed">
+              {auction.description}
+            </p>
           </div>
 
           {/* Price Card - Highlighted with Crown */}
@@ -138,7 +149,10 @@ export default function AuctionDetailPage() {
               {highestBid && (
                 <p className="text-gray-600 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-green-600" />
-                  by <span className="font-semibold">{highestBid.bidderUsername}</span>
+                  by{" "}
+                  <span className="font-semibold">
+                    {highestBid.bidderUsername}
+                  </span>
                 </p>
               )}
 
@@ -212,9 +226,11 @@ export default function AuctionDetailPage() {
             ) : (
               bidHistory
                 .slice()
-                .reverse()
+                .sort((a, b) => Number(b.amount) - Number(a.amount))
                 .map((bid, index) => {
-                  const isHighest = index === 0;
+                  const isHighest =
+                    highestBid !== null &&
+                    Number(bid.amount) === Number(highestBid.amount);
                   return (
                     <div
                       key={index}
@@ -222,7 +238,9 @@ export default function AuctionDetailPage() {
                         ${isHighest ? "bg-amber-50 border-amber-100" : "hover:bg-gray-50"}`}
                     >
                       <div className="flex items-center gap-4">
-                        {isHighest && <Crown className="w-5 h-5 text-amber-600" />}
+                        {isHighest && (
+                          <Crown className="w-5 h-5 text-amber-600" />
+                        )}
                         <div>
                           <p className="font-medium">{bid.bidderUsername}</p>
                           <p className="text-xs text-gray-500">
@@ -232,11 +250,15 @@ export default function AuctionDetailPage() {
                       </div>
 
                       <div className="text-right">
-                        <p className={`text-xl font-bold ${isHighest ? "text-amber-600" : "text-gray-900"}`}>
+                        <p
+                          className={`text-xl font-bold ${isHighest ? "text-amber-600" : "text-gray-900"}`}
+                        >
                           ₹{bid.amount.toLocaleString()}
                         </p>
                         {isHighest && (
-                          <p className="text-[10px] uppercase tracking-widest text-amber-600 font-semibold">LEADING</p>
+                          <p className="text-[10px] uppercase tracking-widest text-amber-600 font-semibold">
+                            LEADING
+                          </p>
                         )}
                       </div>
                     </div>
