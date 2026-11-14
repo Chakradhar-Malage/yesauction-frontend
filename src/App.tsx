@@ -24,48 +24,58 @@ import AdminUsers from "./pages/AdminUsers";
 import AdminAuctions from "./pages/AdminAuctions";
 import Help from "./pages/Help";
 import WonAuctions from "./pages/WonAuctions";
-
+import ProtectedRoute from "./Components/Auth/ProtectedRoute"; // ← Add this
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-
-        {/* Layout wrapper */}
+        {/* ========== Public routes with Layout ========== */}
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/auctions" element={<AuctionList />} />
           <Route path="/auction/:id" element={<AuctionDetail />} />
           <Route path="/users/:username" element={<Profile />} />
-          <Route path="/create-auction" element={<CreateAuction />} />
-          <Route path="/my-auctions" element={<MyAuctions />} />
-          <Route path="/my-bids" element={<MyBids />} />
-          <Route path="/edit-auction/:id" element={<EditAuction />} />
-          <Route path="/dashboard" element={<SellerDashboard />} />
-          <Route path="/edit-profile" element={<EditProfile />} />
-          <Route path="/notifications" element={<Notifications/>}/>
-          <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/help" element={<Help />} />
-          <Route path="/won-auctions" element={<WonAuctions />} />
 
-          {/* Admin routes */}
-            <Route path="/admin" element={<AdminProtectedRoute> <AdminLayout /></AdminProtectedRoute>}>
+          {/* ========== Protected routes (require login) ========== */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/create-auction" element={<CreateAuction />} />
+            <Route path="/my-auctions" element={<MyAuctions />} />
+            <Route path="/my-bids" element={<MyBids />} />
+            <Route path="/edit-auction/:id" element={<EditAuction />} />
+            <Route path="/dashboard" element={<SellerDashboard />} />
+            <Route path="/edit-profile" element={<EditProfile />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/watchlist" element={<Watchlist />} />
+            <Route path="/won-auctions" element={<WonAuctions />} />
+          </Route>
+
+          {/* ========== Admin routes ========== */}
+          <Route
+            path="/admin"
+            element={
+              <AdminProtectedRoute>
+                <AdminLayout />
+              </AdminProtectedRoute>
+            }
+          >
             <Route index element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="auctions" element={<AdminAuctions />} />
-            <Route path="/admin/contact-messages" element={<AdminContactMessages />} />
-            {/* Future pages */}
-            {/* <Route path="users" element={<AdminUsers />} /> */}
-            {/* <Route path="auctions" element={<AdminAuctions />} /> */}
+            <Route path="contact-messages" element={<AdminContactMessages />} />
           </Route>
         </Route>
 
-        {/* No layout */}
+        {/* ========== Public routes WITHOUT Layout ========== */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/verify-mobile" element={<VerifyMobile />} />
-
+        
+        {/* Protect verify-mobile as well */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/verify-mobile" element={<VerifyMobile />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
